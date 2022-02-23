@@ -8,10 +8,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.List;
 
 @Mixin(CommandSuggestor.SuggestionWindow.class)
-public interface SuggestionWindowAccessors
+public interface SuggestionWindowInvokers
 {
-    @Invoker("<init>")
-    static CommandSuggestor.SuggestionWindow create(CommandSuggestor outer, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion) {
+    @SuppressWarnings("unused")
+    @Invoker("<init>") static CommandSuggestor.SuggestionWindow create(CommandSuggestor outer, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion) {
         throw new UnsupportedOperationException();
     }
 }

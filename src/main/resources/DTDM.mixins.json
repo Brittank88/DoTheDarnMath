@@ -5,12 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ChatScreenMixin",
-    "CommandSuggestorMixin",
-    "SuggestionWindowAccessors"
+    "CommandSuggestorAccessorsInvokers",
+    "SuggestionWindowInvokers"
   ],
-  "client": [
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+  "client": [],
+  "injectors": { "defaultRequire": 1 }
 }
