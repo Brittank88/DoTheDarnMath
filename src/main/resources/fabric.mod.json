@@ -4,24 +4,16 @@
   "version": "${version}",
   "name": "DTDM",
   "description": "A mod akin to ChatCalc, allowing for mathematics to be performed in the chat.",
-  "authors": [
-    "Brittank88"
-  ],
+  "authors": [ "Brittank88" ],
   "contact": {},
   "license": "MIT",
   "icon": "assets/DTDM/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "client": [
-      "com.brittank88.dtdm.client.DTDMClient"
-    ],
-    "main": [
-      "com.brittank88.dtdm.DTDM"
-    ]
+    "client": [ "com.brittank88.dtdm.client.DTDMClient" ],
+    "main": [ "com.brittank88.dtdm.DTDM" ]
   },
-  "mixins": [
-    "DTDM.mixins.json"
-  ],
+  "mixins": [ "DTDM.mixins.json" ],
   "depends": {
     "fabricloader": ">=0.13.2",
     "fabric": "*",
