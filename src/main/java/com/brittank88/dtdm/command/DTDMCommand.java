@@ -1,6 +1,7 @@
 package com.brittank88.dtdm.command;
 
 import com.brittank88.dtdm.handler.ConstantHandler;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.command.CommandException;
@@ -70,7 +71,7 @@ public class DTDMCommand {
                                             )
                                     )
                             )
-                    ).then(CommandManager.literal("constants")
+                    ).then(CommandManager.literal("constant")
                             .then(CommandManager.literal("get")
                                     .then(CommandManager.literal("mathematical")
                                             .then(CommandManager.argument("name", StringArgumentType.string())
@@ -96,19 +97,18 @@ public class DTDMCommand {
                             ).then(CommandManager.literal("add")
                                     .then(CommandManager.argument("name", StringArgumentType.string())
                                             .suggests(new UniversalSuggestionProvider<>(ignored -> Collections.singletonList("c" + 1)))
-                                            .then(CommandManager.argument("constant", StringArgumentType.string())
-                                                    .executes(context -> 0)
+                                            .then(CommandManager.argument("constant", DoubleArgumentType.doubleArg())
+                                                    .executes(context -> ConstantHandler.addConstant(
+                                                            StringArgumentType.getString(context, "name"),
+                                                            DoubleArgumentType.getDouble(context, "constant")
+                                                    ))
                                             )
                                     )
                             ).then(CommandManager.literal("remove")
                                     .then(CommandManager.argument("name", StringArgumentType.string())
-                                            .executes(context -> 0)
-                                    )
-                            ).then(CommandManager.literal("edit")
-                                    .then(CommandManager.argument("name", StringArgumentType.string())
-                                            .then(CommandManager.argument("constant", StringArgumentType.string())
-                                                    .executes(context -> 0)
-                                            )
+                                            .executes(context -> ConstantHandler.removeConstant(
+                                                    StringArgumentType.getString(context, "name")
+                                            ))
                                     )
                             )
                     )

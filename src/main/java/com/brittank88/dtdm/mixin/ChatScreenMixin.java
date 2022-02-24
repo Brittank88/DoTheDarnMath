@@ -44,14 +44,17 @@ public class ChatScreenMixin {
 
     @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))
     public void DTDM_onChatFieldUpdate(String chatText, CallbackInfo ci) {
-        if (!chatText.endsWith("=")) { window = null; return; }
+
+        // If the cursor is not directly in front of an '=' char, clear the suggestions window.
+        int cursor = chatField.getCursor();
+        if (cursor == 0 || chatText.charAt(cursor - 1) != '=') { window = null; return; }
 
         // Clear exception messages.
         messages.clear();
 
         // Attempt to find the largest substring that is a valid expression.
         AtomicInteger start = new AtomicInteger(0);
-        int end = chatText.length() - 1;
+        int end = cursor - 1;
         Expression expr;
         do {
             if (start.get() >= end) { window = null; return; }
@@ -69,7 +72,6 @@ public class ChatScreenMixin {
         }
 
         // Generate a suggestion that is either the result or error.
-        int cursor = chatField.getCursor();
         Suggestions suggestions = CommandSource.suggestMatching(
                 suggestionStrings,
                 new SuggestionsBuilder(chatField.getText().substring(0, cursor), cursor)

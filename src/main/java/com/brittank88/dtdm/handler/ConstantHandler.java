@@ -1,5 +1,6 @@
 package com.brittank88.dtdm.handler;
 
+import com.ibm.icu.lang.UCharacter;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandException;
@@ -15,6 +16,23 @@ import java.util.Map;
 
 public abstract class ConstantHandler {
 
+    private static final Map<String, Double> CONSTANTS = new HashMap<>();
+
+    public static int addConstant(String name, double value) throws CommandException {
+        if (!name.chars().filter(UCharacter::isLetter).allMatch(UCharacter::isUpperCase)) throw new CommandException(Text.of("Constant name must be all uppercase letters!"));
+        if (ALL_DEFAULT_CONSTANTS.containsKey(name)) throw new CommandException(Text.of("Cannot override default constant: " + name));
+        // TODO: Handle case where a user overwrites a user constant they previously set.
+        CONSTANTS.put(name, value);
+        return 1;
+    }
+
+    public static int removeConstant(String name) throws CommandException {
+        if (ALL_DEFAULT_CONSTANTS.containsKey(name)) throw new CommandException(Text.of("Cannot remove default constant: " + name));
+        if (!CONSTANTS.containsKey(name)) throw new CommandException(Text.of("Nonexistent: " + name));
+        CONSTANTS.remove(name);
+        return 1;
+    }
+
     private static final Class<?>[] DEFAULT_CONSTANT_CLASSES = new Class<?>[] {
             AstronomicalConstants.class,
             MathConstants.class,
@@ -25,6 +43,11 @@ public abstract class ConstantHandler {
     public static final Map<String, Double> ASTRONOMICAL_CONSTANTS = getConstants(AstronomicalConstants.class);
     public static final Map<String, Double> PHYSICAL_CONSTANTS = getConstants(PhysicalConstants.class);
     public static final Map<String, Double> USER_CONSTANTS = new HashMap<>();  // TODO: Implement.
+    public static final Map<String, Double> ALL_DEFAULT_CONSTANTS = new HashMap<>() {{
+        putAll(MATHEMATICAL_CONSTANTS);
+        putAll(ASTRONOMICAL_CONSTANTS);
+        putAll(PHYSICAL_CONSTANTS);
+    }};
 
     private static Map<String, Double> getConstants(Class<?>... constantContainers) {
         Map<String, Double> constants = new HashMap<>();
