@@ -1,5 +1,6 @@
 package com.brittank88.dtdm.mixin;
 
+import com.brittank88.dtdm.handler.ConstantHandler;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.Message;
@@ -22,6 +23,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
+import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -59,6 +61,11 @@ public class ChatScreenMixin {
         do {
             if (start.get() >= end) { window = null; return; }
             expr = new Expression(chatText.substring(start.getAndAdd(1), end));
+            expr.addConstants(
+                    ConstantHandler.USER_CONSTANTS.stream()
+                            .map(c -> new Constant("[" + c.getConstantName() + "]", c.getConstantValue()))
+                            .toArray(Constant[]::new)
+            );
         } while (!expr.checkSyntax());
 
         // Attempt to calculate the expression. If it fails, the error message is what we will display.

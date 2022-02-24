@@ -10,9 +10,11 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Expression;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DTDMCommand {
 
@@ -75,39 +77,45 @@ public class DTDMCommand {
                             .then(CommandManager.literal("get")
                                     .then(CommandManager.literal("mathematical")
                                             .then(CommandManager.argument("name", StringArgumentType.string())
-                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.MATHEMATICAL_CONSTANTS.keySet()))
-                                                    .executes(ConstantHandler::sendMathematicalConstant)
+                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.MATHEMATICAL_CONSTANTS.stream()
+                                                            .map(Constant::getConstantName).collect(Collectors.toList())
+                                                    )).executes(ConstantHandler::sendMathematicalConstant)
                                             )
                                     ).then(CommandManager.literal("physical")
                                             .then(CommandManager.argument("name", StringArgumentType.string())
-                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.PHYSICAL_CONSTANTS.keySet()))
-                                                    .executes(ConstantHandler::sendPhysicalConstant)
+                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.PHYSICAL_CONSTANTS.stream()
+                                                            .map(Constant::getConstantName).collect(Collectors.toList())
+                                                    )).executes(ConstantHandler::sendPhysicalConstant)
                                             )
                                     ).then(CommandManager.literal("astronomical")
                                             .then(CommandManager.argument("name", StringArgumentType.string())
-                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.ASTRONOMICAL_CONSTANTS.keySet()))
-                                                    .executes(ConstantHandler::sendAstronomicalConstant)
+                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.ASTRONOMICAL_CONSTANTS.stream()
+                                                            .map(Constant::getConstantName).collect(Collectors.toList())
+                                                    )).executes(ConstantHandler::sendAstronomicalConstant)
                                             )
                                     ).then(CommandManager.literal("user")
                                             .then(CommandManager.argument("name", StringArgumentType.string())
-                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.USER_CONSTANTS.keySet()))
-                                                    .executes(ConstantHandler::sendUserConstant)
+                                                    .suggests(new UniversalSuggestionProvider<>(ignored -> ConstantHandler.USER_CONSTANTS.stream()
+                                                            .map(Constant::getConstantName).collect(Collectors.toList())
+                                                    )).executes(ConstantHandler::sendUserConstant)
                                             )
                                     )
                             ).then(CommandManager.literal("add")
                                     .then(CommandManager.argument("name", StringArgumentType.string())
-                                            .suggests(new UniversalSuggestionProvider<>(ignored -> Collections.singletonList("c" + 1)))
+                                            .suggests(new UniversalSuggestionProvider<>(ignored -> Collections.singletonList("C" + ConstantHandler.USER_CONSTANTS.size())))
                                             .then(CommandManager.argument("constant", DoubleArgumentType.doubleArg())
                                                     .executes(context -> ConstantHandler.addConstant(
                                                             StringArgumentType.getString(context, "name"),
-                                                            DoubleArgumentType.getDouble(context, "constant")
+                                                            DoubleArgumentType.getDouble(context, "constant"),
+                                                            context
                                                     ))
                                             )
                                     )
                             ).then(CommandManager.literal("remove")
                                     .then(CommandManager.argument("name", StringArgumentType.string())
                                             .executes(context -> ConstantHandler.removeConstant(
-                                                    StringArgumentType.getString(context, "name")
+                                                    StringArgumentType.getString(context, "name"),
+                                                    context
                                             ))
                                     )
                             )
