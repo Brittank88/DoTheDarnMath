@@ -1,6 +1,5 @@
 package com.brittank88.dtdm.handler;
 
-import com.ibm.icu.lang.UCharacter;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -13,31 +12,39 @@ import org.mariuszgromada.math.mxparser.mathcollection.MathConstants;
 import org.mariuszgromada.math.mxparser.mathcollection.PhysicalConstants;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public abstract class ConstantHandler {
 
     public static final Collection<Constant> USER_CONSTANTS = new ArrayList<>();
 
-    public static int addConstant(String name, double value) throws CommandException {
-        if (!name.chars().filter(UCharacter::isLetter).allMatch(UCharacter::isUpperCase)) throw new CommandException(Text.of("Constant name must be all uppercase letters!"));
-        if (ALL_DEFAULT_CONSTANTS.stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Cannot override default constant: " + name));
-        // TODO: Handle case where a user overwrites a user constant they previously set.
-        if (USER_CONSTANTS.stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Constant already exists: " + name));
-        USER_CONSTANTS.add(new Constant(name, value));
-        return 1;
-    }
-
     public static int addConstant(String name, double value, CommandContext<ServerCommandSource> context) throws CommandException {
-        int ret = addConstant(name, value);
+        // if (!name.chars().filter(UCharacter::isLetter).allMatch(UCharacter::isUpperCase)) throw new CommandException(Text.of("Constant name must be all uppercase letters!"));
+        if (ALL_DEFAULT_CONSTANTS.stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Cannot override default constant: " + name));
+
+        double existingConstantValue = USER_CONSTANTS.stream().filter(c -> c.getConstantName().equals(name)).findFirst().map(Constant::getConstantValue).orElse(Double.NaN);
         context.getSource().sendFeedback(Text.of(
-                "Added constant "
-                        + StringArgumentType.getString(context, "name")
-                        + " with value "
-                        + DoubleArgumentType.getDouble(context, "constant")
-                ), true
-        );
-        return ret;
+                USER_CONSTANTS.stream().anyMatch(c -> c.getConstantName().equals(name)) && !Double.isNaN(existingConstantValue) ?
+                        ("Overwrote constant " + name + ": " + existingConstantValue + "->" + value) :
+                        ("Added constant " + StringArgumentType.getString(context, "name") + " with value " + DoubleArgumentType.getDouble(context, "constant"))
+        ), false);
+
+        if (USER_CONSTANTS.stream().anyMatch(c -> c.getConstantName().equals(name))) {
+            context.getSource().sendFeedback(Text.of("Constant already exists: " + name), false);
+        } else {
+            context.getSource().sendFeedback(Text.of(
+                    "Added constant "
+                            + StringArgumentType.getString(context, "name")
+                            + " with value "
+                            + DoubleArgumentType.getDouble(context, "constant")
+                    ), false
+            );
+        }
+
+        USER_CONSTANTS.add(new Constant(name, value));
+
+        return 1;
     }
 
     public static int removeConstant(String name) throws CommandException {
@@ -49,7 +56,7 @@ public abstract class ConstantHandler {
 
     public static int removeConstant(String name, CommandContext<ServerCommandSource> context) throws CommandException {
         int ret = removeConstant(name);
-        context.getSource().sendFeedback(Text.of("Removed constant " + StringArgumentType.getString(context, "name")), true);
+        context.getSource().sendFeedback(Text.of("Removed constant " + StringArgumentType.getString(context, "name")), false);
         return ret;
     }
 
@@ -61,6 +68,8 @@ public abstract class ConstantHandler {
         addAll(ASTRONOMICAL_CONSTANTS);
         addAll(PHYSICAL_CONSTANTS);
     }};
+
+    public static Collection<Constant> getAllConstants() { return new ArrayList<>() {{ addAll(ALL_DEFAULT_CONSTANTS); addAll(USER_CONSTANTS); }}; }
 
     private static Collection<Constant> getConstants(Class<?>... constantContainers) {
         Collection<Constant> constants = new ArrayList<>(constantContainers.length);
@@ -77,8 +86,9 @@ public abstract class ConstantHandler {
 
     public static int sendMathematicalConstant(CommandContext<ServerCommandSource> context) throws CommandException { return sendConstant(context, MATHEMATICAL_CONSTANTS); }
     public static int sendAstronomicalConstant(CommandContext<ServerCommandSource> context) throws CommandException { return sendConstant(context, ASTRONOMICAL_CONSTANTS); }
-    public static int sendPhysicalConstant(CommandContext<ServerCommandSource> context) throws CommandException { return sendConstant(context, PHYSICAL_CONSTANTS); }
-    public static int sendUserConstant(CommandContext<ServerCommandSource> context) throws CommandException { return sendConstant(context, USER_CONSTANTS); }
+    public static int sendPhysicalConstant    (CommandContext<ServerCommandSource> context) throws CommandException { return sendConstant(context, PHYSICAL_CONSTANTS    ); }
+    public static int sendUserConstant        (CommandContext<ServerCommandSource> context) throws CommandException { return sendConstant(context, USER_CONSTANTS        ); }
+    public static int sendAllConstants        (CommandContext<ServerCommandSource> context) throws CommandException { return sendConstant(context, getAllConstants()     ); }
 
     private static int sendConstant(CommandContext<ServerCommandSource> context, Collection<Constant> constants) throws CommandException {
         String name = StringArgumentType.getString(context, "name");
