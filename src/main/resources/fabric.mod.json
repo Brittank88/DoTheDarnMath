@@ -9,14 +9,7 @@
   "license": "MIT",
   "icon": "assets/DTDM/icon.png",
   "environment": "client",
-  "entrypoints": {
-    "client": [ "com.brittank88.dtdm.client.DTDMClient" ],
-    "main": [ "com.brittank88.dtdm.DTDM" ]
-  },
-  "mixins": [ "DTDM.mixins.json" ],
-  "depends": {
-    "fabricloader": ">=0.13.2",
-    "fabric": "*",
-    "minecraft": "1.18.1"
-  }
+  "entrypoints": { "client": [ "com.brittank88.dtdm.client.DTDMClient" ] },
+  "mixins": [ "DTDM.mixins.json", "DTDM.mixins.event.json" ],
+  "depends": { "fabricloader": ">=0.13.3", "fabric": "*", "minecraft": "1.18.2" }
 }

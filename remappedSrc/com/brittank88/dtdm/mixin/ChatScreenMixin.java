@@ -1,6 +1,10 @@
 package com.brittank88.dtdm.mixin;
 
 import com.brittank88.dtdm.handler.ConstantHandler;
+import com.brittank88.dtdm.mixin.accessors.CommandSuggestorAccessors;
+import com.brittank88.dtdm.mixin.ai_union.CommandSuggestorAIUnion;
+import com.brittank88.dtdm.mixin.invokers.CommandSuggestorInvokers;
+import com.brittank88.dtdm.mixin.invokers.SuggestionWindowInvokers;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.Message;
@@ -40,7 +44,7 @@ public class ChatScreenMixin {
     private CommandSuggestor.SuggestionWindow window = null;
     private final List<OrderedText> messages = Lists.newArrayList();
 
-    @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))
+    @Inject(method = "onChatFieldUpdate", at = @At("HEAD"), cancellable = true)
     public void DTDM_onChatFieldUpdate(String chatText, CallbackInfo ci) {
 
         // If the cursor is not directly in front of an '=' char, clear the suggestions window.
@@ -58,7 +62,7 @@ public class ChatScreenMixin {
             if (start.get() >= end) { window = null; return; }
             expr = new Expression(chatText.substring(start.getAndAdd(1), end));
             expr.addConstants(
-                    ConstantHandler.USER_CONSTANTS.stream()
+                    ConstantHandler.getUserConstants().stream()
                             .map(c -> new Constant("[" + c.getConstantName() + "]", c.getConstantValue()))
                             .toArray(Constant[]::new)
             );
@@ -69,7 +73,7 @@ public class ChatScreenMixin {
         try { suggestionStrings = new String[]{ String.valueOf(expr.calculate()) }; }
         catch (Exception e) {
             Message parseFailedMessage = new LiteralMessage("Failed to parse expression: " + e.getLocalizedMessage());
-            messages.add(CommandSuggestorAccessorsInvokers.invokeFormatException(
+            messages.add(CommandSuggestorInvokers.invokeFormatException(
                     new CommandSyntaxException(new DynamicCommandExceptionType(ignored -> parseFailedMessage), parseFailedMessage)
             ));
         }
@@ -82,7 +86,8 @@ public class ChatScreenMixin {
         if (suggestions.isEmpty()) { window = null; return; }
 
         // Create a suggestion window.
-        CommandSuggestorAccessorsInvokers castCommandSuggestor = (CommandSuggestorAccessorsInvokers) commandSuggestor;
+
+        CommandSuggestorAIUnion castCommandSuggestor = (CommandSuggestorAIUnion) commandSuggestor;
         int i = 0;
         Suggestion suggestion;
         for (
@@ -108,7 +113,7 @@ public class ChatScreenMixin {
     public void DTDM_render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (window != null) window.render(matrices, mouseX, mouseY);
         else {
-            CommandSuggestorAccessorsInvokers castCommandSuggestor = (CommandSuggestorAccessorsInvokers) commandSuggestor;
+            CommandSuggestorAccessors castCommandSuggestor = (CommandSuggestorAccessors) commandSuggestor;
             int i = 0;
             for(Iterator<OrderedText> var5 = messages.iterator(); var5.hasNext(); ++i) {
                 int     j = castCommandSuggestor.getChatScreenSized() ? castCommandSuggestor.getOwner().height - 14 - 13 - 12 * i : 72 + 12 * i,

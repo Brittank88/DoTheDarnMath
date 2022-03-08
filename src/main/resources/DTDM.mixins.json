@@ -4,10 +4,11 @@
   "package": "com.brittank88.dtdm.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ChatScreenMixin",
-    "CommandSuggestorAccessorsInvokers",
-    "SuggestionWindowInvokers"
+    "accessors.ChatScreenAccessors",
+    "accessors_invokers.CommandSuggestorAccessorsInvokers",
+    "accessors_invokers.SuggestionWindowAccessorsInvokers"
   ],
   "client": [],
-  "injectors": { "defaultRequire": 1 }
+  "injectors": {
+    "defaultRequire": 1 }
 }
