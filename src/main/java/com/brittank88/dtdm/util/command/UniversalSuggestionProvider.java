@@ -13,6 +13,7 @@ import java.util.function.Function;
  * Provides a simple way to generate a list of {@link com.mojang.brigadier.suggestion.Suggestion Suggestions}
  * for an {@link com.mojang.brigadier.builder.RequiredArgumentBuilder argument}, from a {@link Iterable<String>}<{@link String}>.
  *
+ * @see SuggestionProvider
  * @author Brittank88
  * @param <T> The type of the command source.
  */

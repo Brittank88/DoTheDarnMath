@@ -1,6 +1,6 @@
 package com.brittank88.dtdm.command;
 
-import com.brittank88.dtdm.util.expression.ExpressionHandler;
+import com.brittank88.dtdm.util.expression.ExpressionUtils;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -18,7 +18,7 @@ public abstract class CalculateCommand {
                 .then(CommandManager.argument("expression", StringArgumentType.string())
                         .executes(context -> {  // Without selector.
                             String expression = StringArgumentType.getString(context, "expression");
-                            context.getSource().sendFeedback(Text.of(expression + " = " + ExpressionHandler.calculateExpression(expression)), false);
+                            context.getSource().sendFeedback(Text.of(expression + " = " + ExpressionUtils.CalculationTools.calculateExpression(expression)), false);
                             return 1;
                         })
                         .then(CommandManager.argument("targets", EntityArgumentType.players())
@@ -28,13 +28,13 @@ public abstract class CalculateCommand {
                                     ServerPlayerEntity playerEntity = source.getPlayer();
 
                                     // Send feedback to the player.
-                                    source.sendFeedback(Text.of(expression + " = " + ExpressionHandler.calculateExpression(expression)), false);
+                                    source.sendFeedback(Text.of(expression + " = " + ExpressionUtils.CalculationTools.calculateExpression(expression)), false);
 
                                     // Broadcast to players in the selector (excluding the player who issued the command).
                                     EntityArgumentType.getPlayers(context, "targets")
                                             .stream().filter(target -> !target.equals(playerEntity))
                                             .forEach(player -> player.sendMessage(Text.of(
-                                                    playerEntity.getDisplayName() + "calculated" + expression + " = " + ExpressionHandler.calculateExpression(expression)
+                                                    playerEntity.getDisplayName() + "calculated" + expression + " = " + ExpressionUtils.CalculationTools.calculateExpression(expression)
                                             ), false));
                                     return 1;
                                 })

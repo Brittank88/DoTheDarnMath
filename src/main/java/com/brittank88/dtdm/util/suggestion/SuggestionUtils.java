@@ -3,6 +3,7 @@ package com.brittank88.dtdm.util.suggestion;
 import com.brittank88.dtdm.mixin.accessors.ChatScreenAccessors;
 import com.brittank88.dtdm.mixin.accessors_invokers.CommandSuggestorAccessorsInvokers;
 import com.brittank88.dtdm.mixin.accessors_invokers.SuggestionWindowAccessorsInvokers;
+import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -16,6 +17,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * A collection of utility methods for working with suggestions and classes that handle suggestion.
@@ -80,5 +82,44 @@ public abstract class SuggestionUtils {
                 suggestions.stream().map(Suggestion::getText).collect(Collectors.toList()),
                 new SuggestionsBuilder(chatField.getText().substring(0, cursor), cursor)
         ).join();
+    }
+
+    /**
+     * <p>Creates and returns a {@link StringReader} for the given {@link TextFieldWidget chatField}'s {@link String}.</p>
+     * <p>The position of the {@link Integer cursor} of the {@link StringReader} is equal to that of the {@link Integer cursor} of the {@link TextFieldWidget chatField}.</p>
+     *
+     * @param chatField The {@link TextFieldWidget chatField} to create the {@link StringReader} for.
+     * @return The created {@link StringReader} instance.
+     */
+    public static StringReader getReaderAtCursor(TextFieldWidget chatField) {
+        StringReader reader = new StringReader(chatField.getText());
+        reader.setCursor(chatField.getCursor());
+        return reader;
+    }
+
+    /**
+     * Creates a {@link Collection}<{@link String}> of suggestions given a {@link String prefix}
+     * and an integer range defined by a {@link Integer start} (inclusive) and {@link Integer end} (exclusive) point.
+     *
+     * @param prefix The {@link String prefix} to use.
+     * @param start The {@link Integer start} (inclusive) point.
+     * @param end The {@link Integer end} (exclusive) point.
+     * @return The created {@link Collection}<{@link String}> of suggestions.
+     */
+    public static Collection<String> suggestFromIntRange(String prefix, int start, int end) {
+        return IntStream.range(start, end).mapToObj(i -> prefix + i).collect(Collectors.toList());
+    }
+
+    /**
+     * Acts like {@link #suggestFromIntRange(String, int, int)} but with an {@link Integer offset} rather than a {@link Integer end}.
+     *
+     * @see #suggestFromIntRange(String, int, int) 
+     * @param prefix The {@link String prefix} to use.
+     * @param start The {@link Integer start} (inclusive) point.
+     * @param offset The {@link Integer offset} to use.
+     * @return The created {@link Collection}<{@link String}> of suggestions.
+     */
+    public static Collection<String> suggestionFromIntOffset(String prefix, int start, int offset) {
+        return suggestFromIntRange(prefix, start, start + offset);
     }
 }

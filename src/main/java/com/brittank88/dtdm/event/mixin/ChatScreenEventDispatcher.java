@@ -1,7 +1,6 @@
 package com.brittank88.dtdm.event.mixin;
 
-import com.brittank88.dtdm.client.DTDMClient;
-import com.brittank88.dtdm.event.callback.*;
+import com.brittank88.dtdm.event.callback.chat_screen.*;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.ActionResult;
@@ -13,9 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenEventDispatcher {
-
-    @Inject(method = "init", at = @At("TAIL"), cancellable = true)
-    public void DTDM_init(CallbackInfo ci) { if (ChatScreenInitCallback.EVENT.invoker().interact((ChatScreen) (Object) this) == ActionResult.FAIL) ci.cancel(); }
 
     @Inject(method = "onChatFieldUpdate", at = @At("HEAD"), cancellable = true)
     public void DTDM_onChatFieldUpdate(String chatText, CallbackInfo ci) {

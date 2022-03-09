@@ -3,7 +3,11 @@
   "minVersion": "0.8",
   "package": "com.brittank88.dtdm.event.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [ "ChatScreenEventDispatcher" ],
+  "mixins": [
+    "ChatScreenEventDispatcher",
+    "MinecraftClientEventDispatcher"
+  ],
   "client": [],
-  "injectors": { "defaultRequire": 1 }
+  "injectors": {
+    "defaultRequire": 1 }
 }
