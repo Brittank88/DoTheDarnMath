@@ -1,12 +1,12 @@
 package com.brittank88.dtdm.util.constant;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.mathcollection.AstronomicalConstants;
@@ -62,25 +62,26 @@ public abstract class ConstantCoordinator {
      * @return Status {@link Integer}.
      * @throws CommandException If the function {@link String name} is invalid, or the {@link String name} references a default {@link Constant}.
      */
+    @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer addConstant(@NonNull String name, double value, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
 
         // Check that constant name is valid and doesn't already exist as a default constant.
-        if (name.isEmpty()) throw new CommandException(Text.of("Name cannot be empty"));
-        if (name.contains(" ")) throw new CommandException(Text.of("Function name cannot contain spaces"));
-        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Cannot override default constant: " + name));
+        if (name.isEmpty()) throw new CommandException(new TranslatableText("message.error.name.generic.empty"));
+        if (name.contains(" ")) throw new CommandException(new TranslatableText("message.error.name.generic.spaces"));
+        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.override.constant", name));
 
         Constant constant = getUserConstants().stream().filter(c -> c.getConstantName().equals(name)).findFirst().orElse(null);
-        String message;
+        TranslatableText message;
         if (constant != null) {
-            message = "Overwrote constant " + name + ": " + constant.getConstantValue() + " -> " + value;
+            message = new TranslatableText("message.warning.override.constant", name, constant.getConstantValue(), value);
             constant.setConstantValue(value);
         } else {
-            message = "Added constant " + name + ": " + value;
+            message = new TranslatableText("message.info.add.constant", name, value);
             constant = new Constant(name, value);
             getUserConstants().add(constant);
         }
 
-        ctx.getSource().sendFeedback(Text.of(message), false);
+        ctx.getSource().sendFeedback(message, false);
 
         return 1;
     }
@@ -93,13 +94,14 @@ public abstract class ConstantCoordinator {
      * @return Status {@link Integer}.
      * @throws CommandException If the {@link String name} references a default {@link Constant} or none at all.
      */
+    @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer removeConstant(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Cannot remove default constant: " + name));
         if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Nonexistent: " + name));
 
         getUserConstants().removeIf(c -> c.getConstantName().equals(name));
 
-        ctx.getSource().sendFeedback(Text.of("Removed constant " + StringArgumentType.getString(ctx, "name")), false);
+        ctx.getSource().sendFeedback(new TranslatableText("message.info.remove.constant", StringArgumentType.getString(ctx, "name")), false);
 
         return 1;
     }

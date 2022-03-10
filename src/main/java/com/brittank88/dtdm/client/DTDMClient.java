@@ -1,6 +1,5 @@
 package com.brittank88.dtdm.client;
 
-import com.brittank88.dtdm.command.root.DTDMCommand;
 import com.brittank88.dtdm.register.CommandRegistry;
 import com.brittank88.dtdm.register.SuggestionSupplierRegistry;
 import net.fabricmc.api.ClientModInitializer;

@@ -7,9 +7,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -25,17 +25,17 @@ import java.util.stream.Stream;
 public class FunctionParametersArgumentType implements ArgumentType<Character[]> {
 
     private static final Pair<Character, Character> BRACES = new Pair<>('(', ')');
-    private static String appendBraces(String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
+    private static @NotNull String appendBraces(String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
 
     // TODO: Convert everything else to use TranslatableText too.
     private static final SimpleCommandExceptionType INVALID_FUNCTION_PARAM_EXCEPTION = new SimpleCommandExceptionType(new TranslatableText("arguments.function_param.invalid"));
 
-    public static FunctionParametersArgumentType functionParameters() { return new FunctionParametersArgumentType(); }
+    public static @NotNull FunctionParametersArgumentType functionParameters() { return new FunctionParametersArgumentType(); }
 
-    public static <S> Character[] getFunctionParams(CommandContext<S> context, String name) { return context.getArgument(name, Character[].class); }
+    public static <S> Character[] getFunctionParams(@NotNull CommandContext<S> context, String name) { return context.getArgument(name, Character[].class); }
 
     @Override
-    public Character[] parse(StringReader reader) throws CommandSyntaxException {
+    public Character @NotNull [] parse(@NotNull StringReader reader) throws CommandSyntaxException {
 
         if (!reader.canRead() || reader.read() != BRACES.getLeft()) throw INVALID_FUNCTION_PARAM_EXCEPTION.create();
         else {

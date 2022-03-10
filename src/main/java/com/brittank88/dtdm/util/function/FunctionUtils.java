@@ -6,6 +6,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.Function;
 
@@ -44,13 +45,13 @@ public abstract class FunctionUtils {
          * @param g The second {@link Function} of the comparison.
          * @return {@code true} if the {@link Function}s are equal, {@code false} otherwise.
          */
-        public static boolean compareAll(Function f, Function g) { return compareName(f, g) && compareExpression(f, g) && compareParameters(f, g); }
+        public static boolean compareAll(@NotNull Function f, @NotNull Function g) { return compareName(f, g) && compareExpression(f, g) && compareParameters(f, g); }
 
-        public static boolean compareName(Function f, Function g) { return f.getFunctionName().equals(g.getFunctionName()); }
+        public static boolean compareName(@NotNull Function f, @NotNull Function g) { return f.getFunctionName().equals(g.getFunctionName()); }
 
-        public static boolean compareExpression(Function f, Function g) { return f.getFunctionExpressionString().equals(g.getFunctionExpressionString()); }
+        public static boolean compareExpression(@NotNull Function f, @NotNull Function g) { return f.getFunctionExpressionString().equals(g.getFunctionExpressionString()); }
 
-        public static boolean compareParameters(Function f, Function g) {
+        public static boolean compareParameters(@NotNull Function f, @NotNull Function g) {
             return f.getParametersNumber() == g.getParametersNumber()
                     && IntStream.range(0, f.getParametersNumber())
                     .mapToObj(i -> new Pair<>(f.getParameterName(i), g.getParameterName(i)))
@@ -72,7 +73,7 @@ public abstract class FunctionUtils {
             return IntStream.range(0, function.getParametersNumber()).mapToObj(function::getParameterName).collect(Collectors.toList());
         }
 
-        public static @NonNull String formatParametersToString(Collection<String> parameters) {
+        public static @NonNull String formatParametersToString(@NotNull Collection<String> parameters) {
             return parameters.stream().map(Object::toString).collect(Collectors.joining(", "));
         }
     }
@@ -88,6 +89,7 @@ public abstract class FunctionUtils {
          * @return Status {@link Integer}.
          * @throws CommandException If the {@link Function} could not be found.
          */
+        @SuppressWarnings("SameReturnValue")
         public static @NonNull Integer sendFunction(@NonNull String name, @NonNull Collection<Function> functions, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
             Function function = functions.stream()
                     .filter(f -> f.getFunctionName().equals(name))
@@ -114,7 +116,7 @@ public abstract class FunctionUtils {
          * @param classes {@link Class Classes} to get {@link Function Functions} from.
          * @return A {@link Collection<Function>} of {@link Function Functions}.
          */
-        static @NonNull Collection<@NonNull Function> getFunctionsFromClasses(@NonNull Class<?>... classes) {
+        static @NonNull Collection<@NonNull Function> getFunctionsFromClasses(@NonNull Class<?> @NotNull ... classes) {
             Collection<Function> functions = new ArrayList<>(classes.length);
             for (Class<?> c : classes) {
                 for (Method m : c.getDeclaredMethods()) {

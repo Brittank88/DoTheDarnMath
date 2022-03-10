@@ -1,0 +1,32 @@
+{
+  "arguments.function_param.invalid": "Invalid function parameter definition",
+
+  "expression.withResult": "%1$s = %2$f",
+
+  "message.error.name.generic.empty": "Name cannot be empty",
+  "message.error.name.generic.spaces": "Name cannot contain spaces",
+  "message.error.override.constant": "Cannot override default constant: %1$s",
+  "message.error.override.function": "Cannot override default function: %1$s",
+  "message.warning.override.constant": "Overwrote Constant %1$s: %2$f -> %3$f",
+  "message.warning.override.function": "Overwrote Function %1$s: %2$s -> %3$s",
+  "message.info.add.constant": "Added Constant %1$s: %2$f",
+  "message.info.remove.constant": "Removed Constant %1$s",
+
+  "commands.generic.argument.targets": "targets",
+  "commands.generic.argument.name": "name",
+  "commands.generic.argument.expression": "expression",
+  "commands.generic.argument.parameters": "parameters",
+  "commands.generic.argument.value": "value",
+  "commands.generic.literal.add": "add",
+  "commands.generic.literal.remove": "remove",
+  "commands.generic.literal.get": "get",
+
+  "commands.dtdm.calculate.literal": "calculate",
+  "commands.dtdm.calculate.broadcast": "%1$s calculated %2$s = %3$s",
+
+  "commands.dtdm.constant.literal": "constant",
+  "commands.dtdm.constant.add.argument.name.suggestPrefix": "C",
+
+  "commands.dtdm.function.literal": "function",
+  "commands.dtdm.function.add.argument.name.suggestPrefix": "f"
+}

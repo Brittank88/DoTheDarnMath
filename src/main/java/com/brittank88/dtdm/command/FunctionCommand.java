@@ -10,14 +10,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.TranslatableText;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public abstract class FunctionCommand {
 
@@ -25,39 +24,49 @@ public abstract class FunctionCommand {
 
         // TODO: Support optional function description.
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal("get");
+        // TODO: Migrate to common lang class.
+        String nameString = new TranslatableText("commands.generic.argument.name").asString(),
+                parametersString = new TranslatableText("commands.generic.argument.parameters").asString(),
+                expressionString = new TranslatableText("commands.generic.argument.expression").asString(),
+                addString = new TranslatableText("commands.generic.literal.add").asString(),
+                removeString = new TranslatableText("commands.generic.literal.remove").asString(),
+                getString = new TranslatableText("commands.generic.literal.get").asString();
+
+
+        @NonNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(getString);
         for (Map.Entry<FunctionCategory, Collection<Function>> entry : FunctionCoordinator.FUNCTIONS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
-                    .then(CommandManager.argument("name", StringArgumentType.word())
+                    .then(CommandManager.argument(nameString, StringArgumentType.word())
                             .suggests(new UniversalSuggestionProvider<>(ignored -> entry.getValue().stream()
                                     .map(Function::getFunctionName)
                                     .collect(Collectors.toList())
-                            )).executes(ctx -> FunctionUtils.CommandTools.sendFunction(StringArgumentType.getString(ctx, "name"), entry.getValue(), ctx))
+                            )).executes(ctx -> FunctionUtils.CommandTools.sendFunction(StringArgumentType.getString(ctx, nameString), entry.getValue(), ctx))
                     )
             );
         }
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal("add")
-                .then(CommandManager.argument("name", StringArgumentType.word())
-                        .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset("f", FunctionCoordinator.getUserFunctions().size(), 3)))
-                        .then(CommandManager.argument("parameters", FunctionParametersArgumentType.functionParameters())
-                                .then(CommandManager.argument("expression", StringArgumentType.greedyString())
+        @NonNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(addString)
+                .then(CommandManager.argument(nameString, StringArgumentType.word())
+                        .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
+                                new TranslatableText("commands.dtdm.function.add.argument.name.suggestPrefix"), FunctionCoordinator.getUserFunctions().size(), 3)
+                        )).then(CommandManager.argument(parametersString, FunctionParametersArgumentType.functionParameters())
+                                .then(CommandManager.argument(expressionString, StringArgumentType.greedyString())
                                         .executes(ctx -> FunctionCoordinator.addFunction(
-                                                StringArgumentType.getString(ctx, "name"),
-                                                FunctionParametersArgumentType.getFunctionParams(ctx, "parameters"),
-                                                StringArgumentType.getString(ctx, "expression"),
+                                                StringArgumentType.getString(ctx, nameString),
+                                                FunctionParametersArgumentType.getFunctionParams(ctx, parametersString),
+                                                StringArgumentType.getString(ctx, expressionString),
                                                 ctx
                                         ))
                                 )
                         )
                 );
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal("remove")
-                .then(CommandManager.argument("name", StringArgumentType.word())
-                        .executes(ctx -> FunctionCoordinator.removeFunction(StringArgumentType.getString(ctx, "name"), ctx))
+        @NonNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(removeString)
+                .then(CommandManager.argument(nameString, StringArgumentType.word())
+                        .executes(ctx -> FunctionCoordinator.removeFunction(StringArgumentType.getString(ctx, nameString), ctx))
                 );
 
-        return CommandManager.literal("function")
+        return CommandManager.literal(new TranslatableText("commands.dtdm.function.literal").asString())
                 .then(getCommand)
                 .then(addCommand)
                 .then(removeCommand);

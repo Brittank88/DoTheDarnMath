@@ -1,11 +1,11 @@
 package com.brittank88.dtdm.util.suggestion;
 
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.command.CommandException;
 import net.minecraft.text.OrderedText;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class SuggestionSupplier {
 
     @FunctionalInterface
     public interface ParserFunction<T, U, R> {
-        R apply(T t, U u) throws CommandException;
+        @NotNull R apply(T t, U u) throws CommandException;
     }
 
     /**
@@ -30,7 +30,7 @@ public class SuggestionSupplier {
 
     public SuggestionSupplier(ParserFunction<TextFieldWidget, StringReader, List<Suggestion>> parser) { this.parser = parser; }
 
-    public SuggestionSupplier parse(TextFieldWidget chatField, StringReader reader) {
+    public @NotNull SuggestionSupplier parse(@NotNull TextFieldWidget chatField, StringReader reader) {
 
         // Clear all suggestions.
         this.suggestions.clear();
@@ -43,6 +43,6 @@ public class SuggestionSupplier {
         // Return this instance, for chained calls.
         return this;
     }
-    public List<Suggestion> getSuggestions() { return this.suggestions; }
-    public List<OrderedText> getMessages() { return this.messages; }
+    public @NotNull List<Suggestion> getSuggestions() { return this.suggestions; }
+    public @NotNull List<OrderedText> getMessages() { return this.messages; }
 }

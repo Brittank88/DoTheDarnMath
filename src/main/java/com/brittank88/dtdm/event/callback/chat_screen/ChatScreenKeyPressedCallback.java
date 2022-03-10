@@ -3,6 +3,7 @@ package com.brittank88.dtdm.event.callback.chat_screen;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.util.ActionResult;
+import org.jetbrains.annotations.NotNull;
 
 public interface ChatScreenKeyPressedCallback {
 
@@ -16,5 +17,5 @@ public interface ChatScreenKeyPressedCallback {
             }
     );
 
-    ActionResult interact(int keyCode, int scanCode, int modifiers);
+    @NotNull ActionResult interact(int keyCode, int scanCode, int modifiers);
 }

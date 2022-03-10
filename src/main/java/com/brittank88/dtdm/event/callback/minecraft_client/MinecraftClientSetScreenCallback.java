@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ActionResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface MinecraftClientSetScreenCallback {
@@ -17,5 +18,5 @@ public interface MinecraftClientSetScreenCallback {
             }
     );
 
-    ActionResult interact(@Nullable Screen screen);
+    @NotNull ActionResult interact(@Nullable Screen screen);
 }

@@ -12,8 +12,10 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.CommandSuggestor;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.command.CommandSource;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,7 +74,7 @@ public abstract class SuggestionUtils {
      * @param suggestions The {@link Collection}<{@link Suggestion}> to convert.
      * @return The converted {@link Suggestions} instance.
      */
-    public static Suggestions fromSuggestionCollection(ChatScreen chatScreen, Collection<Suggestion> suggestions) {
+    public static Suggestions fromSuggestionCollection(ChatScreen chatScreen, @NotNull Collection<Suggestion> suggestions) {
 
         ChatScreenAccessors castChatScreen = (ChatScreenAccessors) chatScreen;
         TextFieldWidget chatField = castChatScreen.getChatField();
@@ -91,7 +93,7 @@ public abstract class SuggestionUtils {
      * @param chatField The {@link TextFieldWidget chatField} to create the {@link StringReader} for.
      * @return The created {@link StringReader} instance.
      */
-    public static StringReader getReaderAtCursor(TextFieldWidget chatField) {
+    public static @NotNull StringReader getReaderAtCursor(@NotNull TextFieldWidget chatField) {
         StringReader reader = new StringReader(chatField.getText());
         reader.setCursor(chatField.getCursor());
         return reader;
@@ -119,7 +121,7 @@ public abstract class SuggestionUtils {
      * @param offset The {@link Integer offset} to use.
      * @return The created {@link Collection}<{@link String}> of suggestions.
      */
-    public static Collection<String> suggestionFromIntOffset(String prefix, int start, int offset) {
-        return suggestFromIntRange(prefix, start, start + offset);
+    public static Collection<String> suggestionFromIntOffset(@NonNull TranslatableText prefix, int start, int offset) {
+        return suggestFromIntRange(prefix.toString(), start, start + offset);
     }
 }

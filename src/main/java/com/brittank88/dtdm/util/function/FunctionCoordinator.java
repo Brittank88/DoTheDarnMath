@@ -7,6 +7,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Function;
 import org.mariuszgromada.math.mxparser.mathcollection.*;
 
@@ -69,9 +70,10 @@ public abstract class FunctionCoordinator {
      * @return Status {@link Integer}.
      * @throws CommandException If the function {@link String name} or {@link String expression} is invalid, or the {@link String name} references a default {@link Function}.
      */
+    @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer addFunction(
             @NonNull String name,
-            @NonNull Character[] parameters,
+            @NonNull Character @NotNull [] parameters,
             @NonNull String expression,
             @NonNull CommandContext<ServerCommandSource> ctx
     ) throws CommandException {
@@ -125,6 +127,7 @@ public abstract class FunctionCoordinator {
      * @return Status {@link Integer}.
      * @throws CommandException If the {@link String name} is invalid or references a default {@link Function}.
      */
+    @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer removeFunction(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (name.isEmpty()) throw new CommandException(Text.of("Function name cannot be empty"));
         if (name.contains(" ")) throw new CommandException(Text.of("Function name cannot contain spaces"));

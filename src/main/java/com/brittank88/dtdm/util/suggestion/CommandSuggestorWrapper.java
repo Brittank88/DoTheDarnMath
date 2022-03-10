@@ -12,13 +12,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.ActionResult;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class CommandSuggestorWrapper {
@@ -125,7 +123,7 @@ public class CommandSuggestorWrapper {
      * @param narrate Whether the {@link net.minecraft.client.gui.screen.CommandSuggestor.SuggestionWindow} is narrating the first suggestion.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public CommandSuggestorWrapper setNarration(boolean narrate) { this.narrateFirstSuggestion = narrate; return this; }
+    public @NotNull CommandSuggestorWrapper setNarration(boolean narrate) { this.narrateFirstSuggestion = narrate; return this; }
 
     /**
      * Adds a {@link SuggestionSupplier} to the {@link CommandSuggestorWrapper} instance.
@@ -133,7 +131,7 @@ public class CommandSuggestorWrapper {
      * @param supplier The {@link SuggestionSupplier} to add.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public CommandSuggestorWrapper addSupplier(@NonNull SuggestionSupplier supplier) { this.SuggestionSuppliers.add(supplier); return this; }
+    public @NotNull CommandSuggestorWrapper addSupplier(@NonNull SuggestionSupplier supplier) { this.SuggestionSuppliers.add(supplier); return this; }
 
     /**
      * Adds multiple {@link SuggestionSupplier}s to the {@link CommandSuggestorWrapper} instance.
@@ -141,7 +139,7 @@ public class CommandSuggestorWrapper {
      * @param suppliers The {@link SuggestionSupplier}s to add.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public CommandSuggestorWrapper addSuppliers(@NonNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.addAll(List.of(suppliers)); return this; }
+    public @NotNull CommandSuggestorWrapper addSuppliers(@NonNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.addAll(List.of(suppliers)); return this; }
 
     /**
      * Removes a {@link SuggestionSupplier} from the {@link CommandSuggestorWrapper} instance.
@@ -149,7 +147,7 @@ public class CommandSuggestorWrapper {
      * @param supplier The {@link SuggestionSupplier} to remove.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public CommandSuggestorWrapper removeSupplier(@NonNull SuggestionSupplier supplier) { this.SuggestionSuppliers.remove(supplier); return this; }
+    public @NotNull CommandSuggestorWrapper removeSupplier(@NonNull SuggestionSupplier supplier) { this.SuggestionSuppliers.remove(supplier); return this; }
 
     /**
      * Removes multiple {@link SuggestionSupplier}s from the {@link CommandSuggestorWrapper} instance.
@@ -157,11 +155,12 @@ public class CommandSuggestorWrapper {
      * @param suppliers The {@link SuggestionSupplier}s to remove.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public CommandSuggestorWrapper removeSuppliers(@NonNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.removeAll(List.of(suppliers)); return this; }
+    public @NotNull CommandSuggestorWrapper removeSuppliers(@NonNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.removeAll(List.of(suppliers)); return this; }
 
     //#// Event Callbacks //#//
 
-    private ActionResult onChatFieldUpdate(String chatText) {
+    @SuppressWarnings("SameReturnValue")
+    private @NotNull ActionResult onChatFieldUpdate(String chatText) {
 
         // Get the chatField.
         TextFieldWidget chatField = ((ChatScreenAccessors) this.chatScreen).getChatField();
@@ -182,22 +181,26 @@ public class CommandSuggestorWrapper {
         return ActionResult.PASS;
     }
 
-    private ActionResult onRender(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @SuppressWarnings("SameReturnValue")
+    private @NotNull ActionResult onRender(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.suggestionWindow != null) this.suggestionWindow.render(matrices, mouseX, mouseY);
         return ActionResult.PASS;
     }
 
-    private ActionResult onKeyPressed(int keyCode, int scanCode, int modifiers) {
+    @SuppressWarnings("SameReturnValue")
+    private @NotNull ActionResult onKeyPressed(int keyCode, int scanCode, int modifiers) {
         if (this.suggestionWindow != null) this.suggestionWindow.keyPressed(keyCode, scanCode, modifiers);
         return ActionResult.PASS;
     }
 
-    private ActionResult onMouseClicked(double mouseX, double mouseY, int button) {
+    @SuppressWarnings("SameReturnValue")
+    private @NotNull ActionResult onMouseClicked(double mouseX, double mouseY, int button) {
         if (this.suggestionWindow != null) this.suggestionWindow.mouseClicked((int) mouseX, (int) mouseY, button);
         return ActionResult.PASS;
     }
 
-    private ActionResult onMouseScrolled(double mouseX, double mouseY, double amount) {
+    @SuppressWarnings("SameReturnValue")
+    private @NotNull ActionResult onMouseScrolled(double mouseX, double mouseY, double amount) {
         if (this.suggestionWindow != null) this.suggestionWindow.mouseScrolled(amount);
         return ActionResult.PASS;
     }

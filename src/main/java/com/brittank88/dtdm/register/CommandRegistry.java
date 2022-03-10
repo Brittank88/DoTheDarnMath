@@ -11,7 +11,7 @@ public abstract class CommandRegistry {
 
     public static void register() {
         ArgumentTypes.register(
-                DTDMClient.MOD_ID + ":function_parameter",
+                DTDMClient.MOD_ID + ":function_parameter", //NON-NLS
                 FunctionParametersArgumentType.class,
                 new ConstantArgumentSerializer<>(FunctionParametersArgumentType::functionParameters)
         );

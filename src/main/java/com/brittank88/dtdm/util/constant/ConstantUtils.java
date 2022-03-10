@@ -5,6 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Expression;
 
@@ -40,6 +41,7 @@ public abstract class ConstantUtils {
          * @return Status {@link Integer}.
          * @throws CommandException If the {@link Constant} could not be found.
          */
+        @SuppressWarnings("SameReturnValue")
         public static @NonNull Integer sendConstant(@NonNull String name, @NonNull Collection<Constant> constants, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
             Double value = constants.stream()
                     .filter(c -> c.getConstantName().equals(name))
@@ -54,7 +56,7 @@ public abstract class ConstantUtils {
 
     public static abstract class ClassTools {
 
-        static @NonNull Collection<@NonNull Constant> getConstantsFromClasses(@NonNull Class<?>... classes) {
+        static @NonNull Collection<@NonNull Constant> getConstantsFromClasses(@NonNull Class<?> @NotNull ... classes) {
             Collection<Constant> constants = new ArrayList<>(classes.length);
             for (Class<?> c : classes) {
                 for (Field f : c.getDeclaredFields()) {

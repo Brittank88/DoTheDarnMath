@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.ActionResult;
+import org.jetbrains.annotations.NotNull;
 
 public interface ChatScreenRenderCallback {
 
@@ -17,5 +18,5 @@ public interface ChatScreenRenderCallback {
             }
     );
 
-    ActionResult interact(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    @NotNull ActionResult interact(MatrixStack matrices, int mouseX, int mouseY, float delta);
 }
