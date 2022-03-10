@@ -1,3 +1,4 @@
+//file:noinspection HardCodedStringLiteral
 pluginManagement {
     repositories {
         maven {

@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Function;
@@ -79,9 +80,9 @@ public abstract class FunctionCoordinator {
     ) throws CommandException {
 
         // Check that function name and expression are valid and don't already exist as a default function.
-        if (name.isEmpty()) throw new CommandException(Text.of("Function name cannot be empty"));
-        if (expression.isEmpty()) throw new CommandException(Text.of("Function expression cannot be empty"));
-        if (name.contains(" ")) throw new CommandException(Text.of("Function name cannot contain spaces"));
+        if (name.isEmpty()) throw new CommandException(new TranslatableText("message.error.name.generic.empty"));
+        if (expression.isEmpty()) throw new CommandException(new TranslatableText("message.error.expression.empty"));
+        if (name.contains(" ")) throw new CommandException(new TranslatableText("message.error.name.generic.spaces"));
 
         String parameterString = Arrays.stream(parameters).map(Object::toString).collect(Collectors.joining(", "));
         String functionDefinitionString = name + "(" + parameterString + ")=" + expression;
@@ -91,19 +92,22 @@ public abstract class FunctionCoordinator {
                 .filter(f -> FunctionUtils.ComparisonTools.compareName(f, new Function(functionDefinitionString))
                         && FunctionUtils.ComparisonTools.compareParameters(f, new Function(functionDefinitionString)))
                 .findFirst().orElse(null);
-        String message;
+        TranslatableText message;
         if (existingFunction != null) {
-            message = "Overwrote function "
-                    + FunctionUtils.StringTools.getFunctionDisplayString(existingFunction, false) + ": "
-                    + existingFunction.getFunctionExpressionString() + " -> " + expression;
+            message = new TranslatableText(
+                    "message.warning.function.override",
+                    FunctionUtils.StringTools.getFunctionDisplayString(existingFunction, false),
+                    existingFunction.getFunctionExpressionString(),
+                    expression
+            );
 
             getUserFunctions().remove(existingFunction);
         } else {
             // Check that the function doesn't already exist as a default function.
             if (getAllDefaultFunctions().stream().anyMatch(f -> FunctionUtils.ComparisonTools.compareAll(f, newFunction)))
-                throw new CommandException(Text.of("Cannot override default function: " + name));
+                throw new CommandException(new TranslatableText("message.error.function.override", name));
 
-            message = "Added function " + FunctionUtils.StringTools.getFunctionDisplayString(newFunction, false);
+            message = new TranslatableText("message.info.function.add", FunctionUtils.StringTools.getFunctionDisplayString(newFunction, false));
         }
 
         // Populate with functions and constants.
@@ -113,7 +117,7 @@ public abstract class FunctionCoordinator {
 
         getUserFunctions().add(newFunction);
 
-        ctx.getSource().sendFeedback(Text.of(message), false);
+        ctx.getSource().sendFeedback(message, false);
 
         // Return success.
         return 1;

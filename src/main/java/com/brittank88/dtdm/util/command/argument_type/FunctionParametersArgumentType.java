@@ -74,5 +74,5 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
     }
 
     @Override
-    public Collection<String> getExamples() { return Stream.of("x,y,z", "x").map(FunctionParametersArgumentType::appendBraces).toList(); }
+    public Collection<String> getExamples() { return Stream.of("x,y,z", "x").map(FunctionParametersArgumentType::appendBraces).toList(); } //NON-NLS
 }

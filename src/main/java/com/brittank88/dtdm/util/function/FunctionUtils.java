@@ -4,6 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Pair;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -93,12 +94,12 @@ public abstract class FunctionUtils {
         public static @NonNull Integer sendFunction(@NonNull String name, @NonNull Collection<Function> functions, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
             Function function = functions.stream()
                     .filter(f -> f.getFunctionName().equals(name))
-                    .findFirst().orElseThrow(() -> new CommandException(Text.of("Nonexistent: " + name)));
+                    .findFirst().orElseThrow(() -> new CommandException(new TranslatableText("message.error.name.generic.nonexistent", name)));
 
             String descriptionString = function.getDescription();
             ctx.getSource().sendFeedback(Text.of(
                     StringTools.getFunctionDisplayString(function, true)
-                            + " [Computes in " + function.getComputingTime() + "s]"
+                            + new TranslatableText("message.info.function.computeTime", function.getComputingTime())
                             + (descriptionString.isBlank() ? "" : '\n' + descriptionString)
             ), false);
 

@@ -68,15 +68,15 @@ public abstract class ConstantCoordinator {
         // Check that constant name is valid and doesn't already exist as a default constant.
         if (name.isEmpty()) throw new CommandException(new TranslatableText("message.error.name.generic.empty"));
         if (name.contains(" ")) throw new CommandException(new TranslatableText("message.error.name.generic.spaces"));
-        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.override.constant", name));
+        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.constant.override", name));
 
         Constant constant = getUserConstants().stream().filter(c -> c.getConstantName().equals(name)).findFirst().orElse(null);
         TranslatableText message;
         if (constant != null) {
-            message = new TranslatableText("message.warning.override.constant", name, constant.getConstantValue(), value);
+            message = new TranslatableText("message.warning.constant.override", name, constant.getConstantValue(), value);
             constant.setConstantValue(value);
         } else {
-            message = new TranslatableText("message.info.add.constant", name, value);
+            message = new TranslatableText("message.info.constant.add", name, value);
             constant = new Constant(name, value);
             getUserConstants().add(constant);
         }
@@ -96,12 +96,15 @@ public abstract class ConstantCoordinator {
      */
     @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer removeConstant(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
-        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Cannot remove default constant: " + name));
-        if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Nonexistent: " + name));
+        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.constant.removeDefault", name));
+        if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.name.generic.nonexistent", name));
 
         getUserConstants().removeIf(c -> c.getConstantName().equals(name));
 
-        ctx.getSource().sendFeedback(new TranslatableText("message.info.remove.constant", StringArgumentType.getString(ctx, "name")), false);
+        ctx.getSource().sendFeedback(new TranslatableText(
+                "message.info.remove.constant",
+                StringArgumentType.getString(ctx, new TranslatableText("commands.generic.argument.name").asString())
+        ), false);
 
         return 1;
     }

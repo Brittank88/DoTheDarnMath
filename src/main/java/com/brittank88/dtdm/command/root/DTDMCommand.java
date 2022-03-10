@@ -14,7 +14,7 @@ public abstract class DTDMCommand {
     // TODO: Support for org.mariuszgromada.math.mxparser.mathcollection.SpecialValuesTrigonometric.
 
     public static @NonNull LiteralArgumentBuilder<ServerCommandSource> build() {
-        return CommandManager.literal("dtdm")
+        return CommandManager.literal("dtdm") //NON-NLS
                 .then(CalculateCommand.build())
                 .then(ConstantCommand.build())
                 .then(FunctionCommand.build());

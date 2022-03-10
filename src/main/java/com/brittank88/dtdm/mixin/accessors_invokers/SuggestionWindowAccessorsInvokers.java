@@ -17,7 +17,7 @@ public interface SuggestionWindowAccessorsInvokers {
 
     // Invokers
     @SuppressWarnings("unused")
-    @Invoker("<init>") static CommandSuggestor.@NotNull SuggestionWindow create(CommandSuggestor outer, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion) {
+    @Invoker("<init>") static CommandSuggestor.@NotNull SuggestionWindow create(CommandSuggestor outer, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion) { //NON-NLS
         throw new UnsupportedOperationException("Invoker method stub called directly!");
     }
 }
