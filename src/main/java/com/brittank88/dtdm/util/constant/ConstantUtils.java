@@ -1,6 +1,7 @@
 package com.brittank88.dtdm.util.constant;
 
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -46,7 +47,7 @@ public abstract class ConstantUtils {
             Double value = constants.stream()
                     .filter(c -> c.getConstantName().equals(name))
                     .map(Constant::getConstantValue)
-                    .findFirst().orElseThrow(() -> new CommandException(Text.of("Nonexistent: " + name)));
+                    .findFirst().orElseThrow(() -> new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name))));
 
             ctx.getSource().sendFeedback(Text.of(name + " = " + value), false);
 

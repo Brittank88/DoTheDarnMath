@@ -5,7 +5,6 @@ import com.brittank88.dtdm.util.function.FunctionUtils;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.mariuszgromada.math.mxparser.Expression;
 

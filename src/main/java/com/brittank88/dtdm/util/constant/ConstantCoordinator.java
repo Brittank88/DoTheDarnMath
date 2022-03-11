@@ -7,7 +7,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.mathcollection.AstronomicalConstants;
@@ -52,6 +51,7 @@ public abstract class ConstantCoordinator {
      *
      * @return A {@link Collection<Constant>} of all {@link Constant Constants}.
      */
+    @SuppressWarnings("unused")
     public static @NonNull Collection<@NonNull Constant> getAllConstants() { return CONSTANTS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
 
     /**

@@ -7,7 +7,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Function;
@@ -59,6 +58,7 @@ public abstract class FunctionCoordinator {
      *
      * @return A {@link Collection<Function>} of all {@link Function Functions}.
      */
+    @SuppressWarnings("unused")
     public static @NonNull Collection<@NonNull Function> getAllFunctions() { return FUNCTIONS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
 
     /**
