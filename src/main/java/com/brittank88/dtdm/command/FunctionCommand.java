@@ -40,7 +40,7 @@ public abstract class FunctionCommand {
         @NonNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(LangUtils.CommonLang.Literal.ADD)
                 .then(CommandManager.argument(LangUtils.CommonLang.Argument.NAME, StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
-                                I18n.translate("commands.dtdm.function.add.argument.name.suggestPrefix"), FunctionCoordinator.getUserFunctions().size(), 3)
+                                I18n.translate("commands.dtdm.function.add.argument.name.suggest_prefix"), FunctionCoordinator.getUserFunctions().size(), 3)
                         )).then(CommandManager.argument(LangUtils.CommonLang.Argument.PARAMETERS, FunctionParametersArgumentType.functionParameters())
                                 .then(CommandManager.argument(LangUtils.CommonLang.Argument.EXPRESSION, StringArgumentType.greedyString())
                                         .executes(ctx -> FunctionCoordinator.addFunction(

@@ -29,7 +29,7 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
     private static final Pair<Character, Character> BRACES = new Pair<>('(', ')');
     private static @NotNull String appendBraces(String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
 
-    private static final SimpleCommandExceptionType INVALID_FUNCTION_PARAM_EXCEPTION = new SimpleCommandExceptionType(Text.of(I18n.translate("arguments.function_param.invalid")));
+    private static final SimpleCommandExceptionType INVALID_PARAM_EXCEPTION = new SimpleCommandExceptionType(Text.of(I18n.translate("message.error.custom_param.generic.invalid")));
 
     public static @NotNull FunctionParametersArgumentType functionParameters() { return new FunctionParametersArgumentType(); }
 
@@ -38,7 +38,7 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
     @Override
     public Character @NotNull [] parse(@NotNull StringReader reader) throws CommandSyntaxException {
 
-        if (!reader.canRead() || reader.read() != BRACES.getLeft()) throw INVALID_FUNCTION_PARAM_EXCEPTION.create();
+        if (!reader.canRead() || reader.read() != BRACES.getLeft()) throw INVALID_PARAM_EXCEPTION.create();
         else {
             // This list holds the function parameters.
             List<Character> chars = new ArrayList<>();
@@ -49,7 +49,7 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
             // We must then be able to locate a closing curly brace to match the opening one.
             // If the closing curly brace is directly after the opening one, just return an empty array.
             try { if (reader.readStringUntil(BRACES.getRight()).isEmpty()) return new Character[0]; }
-            catch (CommandSyntaxException e) { throw INVALID_FUNCTION_PARAM_EXCEPTION.create(); }
+            catch (CommandSyntaxException e) { throw INVALID_PARAM_EXCEPTION.create(); }
 
             // We rewind back to the beginning of the substring contained within the curly braces.
             reader.setCursor(start);
@@ -64,7 +64,7 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
                 if (cRead == ',' || cRead == BRACES.getRight()) continue;
 
                 // Ensure it is a new alphabetic character.
-                if (chars.contains(cRead) || !Character.isAlphabetic(cRead)) throw INVALID_FUNCTION_PARAM_EXCEPTION.create();
+                if (chars.contains(cRead) || !Character.isAlphabetic(cRead)) throw INVALID_PARAM_EXCEPTION.create();
 
                 // We then add the character to our list of characters.
                 chars.add(cRead);

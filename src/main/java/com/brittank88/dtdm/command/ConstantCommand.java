@@ -38,7 +38,7 @@ public abstract class ConstantCommand {
         @NonNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(LangUtils.CommonLang.Literal.ADD)
                 .then(CommandManager.argument(LangUtils.CommonLang.Argument.NAME, StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
-                                I18n.translate("commands.dtdm.constant.add.argument.name.suggestPrefix"),
+                                I18n.translate("commands.dtdm.constant.add.argument.name.suggest_prefix"),
                                 ConstantCoordinator.getUserConstants().size(), 3
                         ))).then(CommandManager.argument(LangUtils.CommonLang.Argument.VALUE, DoubleArgumentType.doubleArg())
                                 .executes(ctx -> ConstantCoordinator.addConstant(

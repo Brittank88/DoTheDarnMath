@@ -19,9 +19,10 @@ public abstract class LangUtils {
         public abstract static class Literal {
 
             public static String
-                    ADD    = I18n.translate("commands.generic.literal.add"),
-                    REMOVE = I18n.translate("commands.generic.literal.remove"),
-                    GET    = I18n.translate("commands.generic.literal.get");
+                    MOD_NAME = I18n.translate("mod.displayName"),
+                    ADD      = I18n.translate("commands.generic.literal.add"),
+                    REMOVE   = I18n.translate("commands.generic.literal.remove"),
+                    GET      = I18n.translate("commands.generic.literal.get");
         }
     }
 }

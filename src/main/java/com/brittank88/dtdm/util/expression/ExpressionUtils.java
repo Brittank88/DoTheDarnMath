@@ -67,12 +67,7 @@ public abstract class ExpressionUtils {
 
             // Send feedback to the player.
             String expression = StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.EXPRESSION);
-            ctx.getSource().sendFeedback(Text.of(
-                    I18n.translate(
-                            "expression.withResult",
-                            expression,
-                            ExpressionUtils.CalculationTools.calculateExpression(expression)
-                    )), false);
+            ctx.getSource().sendFeedback(Text.of(expression + " = " + calculateExpression(expression)), false);
 
             // Broadcast to players in the selector (excluding the player who issued the command).
             ServerPlayerEntity playerEntity = ctx.getSource().getPlayer();

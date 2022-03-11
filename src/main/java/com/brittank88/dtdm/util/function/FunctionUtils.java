@@ -102,7 +102,7 @@ public abstract class FunctionUtils {
             String descriptionString = function.getDescription();
             ctx.getSource().sendFeedback(Text.of(
                     StringTools.getFunctionDisplayString(function, true)
-                            + I18n.translate("message.info.function.computeTime", function.getComputingTime())
+                            + I18n.translate("message.info.function.compute_time", function.getComputingTime())
                             + (descriptionString.isBlank() ? "" : '\n' + descriptionString)
             ), false);
 

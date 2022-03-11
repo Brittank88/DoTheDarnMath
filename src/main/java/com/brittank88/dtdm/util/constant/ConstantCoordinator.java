@@ -97,7 +97,7 @@ public abstract class ConstantCoordinator {
      */
     @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer removeConstant(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
-        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.constant.removeDefault", name)));
+        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.constant.remove_default", name)));
         if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name)));
 
         getUserConstants().removeIf(c -> c.getConstantName().equals(name));
