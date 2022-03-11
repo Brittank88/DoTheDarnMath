@@ -121,7 +121,7 @@ public abstract class SuggestionUtils {
      * @param offset The {@link Integer offset} to use.
      * @return The created {@link Collection}<{@link String}> of suggestions.
      */
-    public static Collection<String> suggestionFromIntOffset(@NonNull TranslatableText prefix, int start, int offset) {
-        return suggestFromIntRange(prefix.toString(), start, start + offset);
+    public static Collection<String> suggestionFromIntOffset(@NonNull String prefix, int start, int offset) {
+        return suggestFromIntRange(prefix, start, start + offset);
     }
 }

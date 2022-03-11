@@ -3,6 +3,7 @@ package com.brittank88.dtdm.util.function;
 import com.brittank88.dtdm.util.constant.ConstantCoordinator;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -80,9 +81,9 @@ public abstract class FunctionCoordinator {
     ) throws CommandException {
 
         // Check that function name and expression are valid and don't already exist as a default function.
-        if (name.isEmpty()) throw new CommandException(new TranslatableText("message.error.name.generic.empty"));
-        if (expression.isEmpty()) throw new CommandException(new TranslatableText("message.error.expression.empty"));
-        if (name.contains(" ")) throw new CommandException(new TranslatableText("message.error.name.generic.spaces"));
+        if (name.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.empty")));
+        if (expression.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.expression.empty")));
+        if (name.contains(" ")) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.spaces")));
 
         String parameterString = Arrays.stream(parameters).map(Object::toString).collect(Collectors.joining(", "));
         String functionDefinitionString = name + "(" + parameterString + ")=" + expression;
@@ -92,9 +93,9 @@ public abstract class FunctionCoordinator {
                 .filter(f -> FunctionUtils.ComparisonTools.compareName(f, new Function(functionDefinitionString))
                         && FunctionUtils.ComparisonTools.compareParameters(f, new Function(functionDefinitionString)))
                 .findFirst().orElse(null);
-        TranslatableText message;
+        String message;
         if (existingFunction != null) {
-            message = new TranslatableText(
+            message = I18n.translate(
                     "message.warning.function.override",
                     FunctionUtils.StringTools.getFunctionDisplayString(existingFunction, false),
                     existingFunction.getFunctionExpressionString(),
@@ -105,9 +106,9 @@ public abstract class FunctionCoordinator {
         } else {
             // Check that the function doesn't already exist as a default function.
             if (getAllDefaultFunctions().stream().anyMatch(f -> FunctionUtils.ComparisonTools.compareAll(f, newFunction)))
-                throw new CommandException(new TranslatableText("message.error.function.override", name));
+                throw new CommandException(Text.of(I18n.translate("message.error.function.override", name)));
 
-            message = new TranslatableText("message.info.function.add", FunctionUtils.StringTools.getFunctionDisplayString(newFunction, false));
+            message = I18n.translate("message.info.function.add", FunctionUtils.StringTools.getFunctionDisplayString(newFunction, false));
         }
 
         // Populate with functions and constants.
@@ -117,7 +118,7 @@ public abstract class FunctionCoordinator {
 
         getUserFunctions().add(newFunction);
 
-        ctx.getSource().sendFeedback(message, false);
+        ctx.getSource().sendFeedback(Text.of(message), false);
 
         // Return success.
         return 1;
@@ -133,13 +134,13 @@ public abstract class FunctionCoordinator {
      */
     @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer removeFunction(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
-        if (name.isEmpty()) throw new CommandException(Text.of("Function name cannot be empty"));
-        if (name.contains(" ")) throw new CommandException(Text.of("Function name cannot contain spaces"));
-        if (getAllDefaultFunctions().stream().anyMatch(f -> f.getFunctionName().equals(name))) throw new CommandException(Text.of("Cannot remove default function: " + name));
+        if (name.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.empty")));
+        if (name.contains(" ")) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.spaces")));
+        if (getAllDefaultFunctions().stream().anyMatch(f -> f.getFunctionName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.function.removeDefault", name)));
 
         getUserFunctions().removeIf(f -> f.getFunctionName().equals(name));
 
-        ctx.getSource().sendFeedback(Text.of("Removed function " + name), false);
+        ctx.getSource().sendFeedback(Text.of(I18n.translate("message.info.function.remove", name)), false);
 
         return 1;
     }

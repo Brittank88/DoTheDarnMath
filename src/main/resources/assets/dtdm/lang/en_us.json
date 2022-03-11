@@ -13,6 +13,7 @@
   "message.error.constant.override": "Cannot override default constant: %1$s",
   "message.error.constant.removeDefault": "Cannot remove default constant: %1$s",
   "message.error.function.override": "Cannot override default function: %1$s",
+  "message.error.function.removeDefault": "Cannot remove default constant: %1$s",
   "message.error.expression.population": "Failed to populate expression:\n%1$s",
   "message.error.expression.calculation": "Failed to calculate expression:\n%1$s",
   "message.error.expression.syntax": "Syntax error in expression:\n%1$s",

@@ -7,7 +7,7 @@
   "authors": [ "Brittank88" ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/DTDM/icon.png",
+  "icon": "assets/dtdm/icon.png",
   "environment": "client",
   "entrypoints": { "client": [ "com.brittank88.dtdm.client.DTDMClient" ] },
   "mixins": [ "DTDM.mixins.json", "DTDM.mixins.event.json" ],

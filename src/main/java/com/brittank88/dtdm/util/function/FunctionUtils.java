@@ -1,6 +1,7 @@
 package com.brittank88.dtdm.util.function;
 
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -94,12 +95,12 @@ public abstract class FunctionUtils {
         public static @NonNull Integer sendFunction(@NonNull String name, @NonNull Collection<Function> functions, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
             Function function = functions.stream()
                     .filter(f -> f.getFunctionName().equals(name))
-                    .findFirst().orElseThrow(() -> new CommandException(new TranslatableText("message.error.name.generic.nonexistent", name)));
+                    .findFirst().orElseThrow(() -> new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name))));
 
             String descriptionString = function.getDescription();
             ctx.getSource().sendFeedback(Text.of(
                     StringTools.getFunctionDisplayString(function, true)
-                            + new TranslatableText("message.info.function.computeTime", function.getComputingTime())
+                            + I18n.translate("message.info.function.computeTime", function.getComputingTime())
                             + (descriptionString.isBlank() ? "" : '\n' + descriptionString)
             ), false);
 

@@ -8,9 +8,9 @@ import com.brittank88.dtdm.util.function.FunctionUtils;
 import com.brittank88.dtdm.util.suggestion.SuggestionUtils;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.TranslatableText;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.mariuszgromada.math.mxparser.Function;
 
@@ -25,12 +25,12 @@ public abstract class FunctionCommand {
         // TODO: Support optional function description.
 
         // TODO: Migrate to common lang class.
-        String nameString = new TranslatableText("commands.generic.argument.name").asString(),
-                parametersString = new TranslatableText("commands.generic.argument.parameters").asString(),
-                expressionString = new TranslatableText("commands.generic.argument.expression").asString(),
-                addString = new TranslatableText("commands.generic.literal.add").asString(),
-                removeString = new TranslatableText("commands.generic.literal.remove").asString(),
-                getString = new TranslatableText("commands.generic.literal.get").asString();
+        String nameString = I18n.translate("commands.generic.argument.name"),
+                parametersString = I18n.translate("commands.generic.argument.parameters"),
+                expressionString = I18n.translate("commands.generic.argument.expression"),
+                addString = I18n.translate("commands.generic.literal.add"),
+                removeString = I18n.translate("commands.generic.literal.remove"),
+                getString = I18n.translate("commands.generic.literal.get");
 
 
         @NonNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(getString);
@@ -48,7 +48,7 @@ public abstract class FunctionCommand {
         @NonNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(addString)
                 .then(CommandManager.argument(nameString, StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
-                                new TranslatableText("commands.dtdm.function.add.argument.name.suggestPrefix"), FunctionCoordinator.getUserFunctions().size(), 3)
+                                I18n.translate("commands.dtdm.function.add.argument.name.suggestPrefix"), FunctionCoordinator.getUserFunctions().size(), 3)
                         )).then(CommandManager.argument(parametersString, FunctionParametersArgumentType.functionParameters())
                                 .then(CommandManager.argument(expressionString, StringArgumentType.greedyString())
                                         .executes(ctx -> FunctionCoordinator.addFunction(
@@ -66,7 +66,7 @@ public abstract class FunctionCommand {
                         .executes(ctx -> FunctionCoordinator.removeFunction(StringArgumentType.getString(ctx, nameString), ctx))
                 );
 
-        return CommandManager.literal(new TranslatableText("commands.dtdm.function.literal").asString())
+        return CommandManager.literal(I18n.translate("commands.dtdm.function.literal"))
                 .then(getCommand)
                 .then(addCommand)
                 .then(removeCommand);

@@ -3,6 +3,7 @@ package com.brittank88.dtdm.util.constant;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -66,22 +67,22 @@ public abstract class ConstantCoordinator {
     public static @NonNull Integer addConstant(@NonNull String name, double value, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
 
         // Check that constant name is valid and doesn't already exist as a default constant.
-        if (name.isEmpty()) throw new CommandException(new TranslatableText("message.error.name.generic.empty"));
-        if (name.contains(" ")) throw new CommandException(new TranslatableText("message.error.name.generic.spaces"));
-        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.constant.override", name));
+        if (name.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.empty")));
+        if (name.contains(" ")) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.spaces")));
+        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.constant.override", name)));
 
         Constant constant = getUserConstants().stream().filter(c -> c.getConstantName().equals(name)).findFirst().orElse(null);
-        TranslatableText message;
+        String message;
         if (constant != null) {
-            message = new TranslatableText("message.warning.constant.override", name, constant.getConstantValue(), value);
+            message = I18n.translate("message.warning.constant.override", name, constant.getConstantValue(), value);
             constant.setConstantValue(value);
         } else {
-            message = new TranslatableText("message.info.constant.add", name, value);
+            message = I18n.translate("message.info.constant.add", name, value);
             constant = new Constant(name, value);
             getUserConstants().add(constant);
         }
 
-        ctx.getSource().sendFeedback(message, false);
+        ctx.getSource().sendFeedback(Text.of(message), false);
 
         return 1;
     }
@@ -96,15 +97,15 @@ public abstract class ConstantCoordinator {
      */
     @SuppressWarnings("SameReturnValue")
     public static @NonNull Integer removeConstant(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
-        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.constant.removeDefault", name));
-        if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(new TranslatableText("message.error.name.generic.nonexistent", name));
+        if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.constant.removeDefault", name)));
+        if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name)));
 
         getUserConstants().removeIf(c -> c.getConstantName().equals(name));
 
-        ctx.getSource().sendFeedback(new TranslatableText(
+        ctx.getSource().sendFeedback(Text.of(I18n.translate(
                 "message.info.remove.constant",
-                StringArgumentType.getString(ctx, new TranslatableText("commands.generic.argument.name").asString())
-        ), false);
+                StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"))
+        )), false);
 
         return 1;
     }

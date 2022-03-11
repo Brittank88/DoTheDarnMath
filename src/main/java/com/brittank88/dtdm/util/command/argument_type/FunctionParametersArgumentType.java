@@ -5,6 +5,8 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +30,7 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
     private static @NotNull String appendBraces(String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
 
     // TODO: Convert everything else to use TranslatableText too.
-    private static final SimpleCommandExceptionType INVALID_FUNCTION_PARAM_EXCEPTION = new SimpleCommandExceptionType(new TranslatableText("arguments.function_param.invalid"));
+    private static final SimpleCommandExceptionType INVALID_FUNCTION_PARAM_EXCEPTION = new SimpleCommandExceptionType(Text.of(I18n.translate("arguments.function_param.invalid")));
 
     public static @NotNull FunctionParametersArgumentType functionParameters() { return new FunctionParametersArgumentType(); }
 
