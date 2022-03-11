@@ -12,7 +12,8 @@ public abstract class LangUtils {
                     NAME       = I18n.translate("commands.generic.argument.name"),
                     VALUE      = I18n.translate("commands.generic.argument.value"),
                     PARAMETERS = I18n.translate("commands.generic.argument.parameters"),
-                    EXPRESSION = I18n.translate("commands.generic.argument.expression");
+                    EXPRESSION = I18n.translate("commands.generic.argument.expression"),
+                    TARGET = I18n.translate("commands.generic.argument.target");
         }
 
         public abstract static class Literal {

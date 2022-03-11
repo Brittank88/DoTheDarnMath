@@ -26,7 +26,7 @@
   "message.info.function.remove": "Removed Function %1$s",
   "message.info.function.computeTime": "[Computes in %1$s sec]",
 
-  "commands.generic.argument.targets": "targets",
+  "commands.generic.argument.target": "target",
   "commands.generic.argument.name": "name",
   "commands.generic.argument.expression": "expression",
   "commands.generic.argument.parameters": "parameters",

@@ -1,5 +1,7 @@
 package com.brittank88.dtdm.util.function;
 
+import com.brittank88.dtdm.util.lang.LangUtils;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
@@ -84,14 +86,15 @@ public abstract class FunctionUtils {
         /**
          * Sends a {@link Function}'s {@link String name} and {@link Double value} to the {@link ServerCommandSource command invoker}.
          *
-         * @param name The {@link String name} of the {@link Function}.
-         * @param functions The {@link Collection<Function>} of {@link Function Functions}.
          * @param ctx The {@link CommandContext <ServerCommandSource>} of the command (for sending feedback to the {@link ServerCommandSource command invoker}).
+         * @param functions The {@link Collection<Function>} of {@link Function Functions}.
          * @return Status {@link Integer}.
          * @throws CommandException If the {@link Function} could not be found.
          */
-        @SuppressWarnings("SameReturnValue")
-        public static @NonNull Integer sendFunction(@NonNull String name, @NonNull Collection<Function> functions, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+        public static @NonNull Integer sendFunction(@NonNull CommandContext<ServerCommandSource> ctx, @NonNull Collection<Function> functions) throws CommandException {
+
+            String name = StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.NAME);
+
             Function function = functions.stream()
                     .filter(f -> f.getFunctionName().equals(name))
                     .findFirst().orElseThrow(() -> new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name))));

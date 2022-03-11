@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
 
     public static @NotNull FunctionParametersArgumentType functionParameters() { return new FunctionParametersArgumentType(); }
 
-    public static <S> Character[] getFunctionParams(@NotNull CommandContext<S> context, String name) { return context.getArgument(name, Character[].class); }
+    public static Character[] getFunctionParams(CommandContext<ServerCommandSource> ctx, String name) { return ctx.getArgument(name, Character[].class); }
 
     @Override
     public Character @NotNull [] parse(@NotNull StringReader reader) throws CommandSyntaxException {

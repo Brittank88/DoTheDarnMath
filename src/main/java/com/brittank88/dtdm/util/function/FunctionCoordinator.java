@@ -3,6 +3,7 @@ package com.brittank88.dtdm.util.function;
 import com.brittank88.dtdm.util.constant.ConstantCoordinator;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
@@ -77,7 +78,7 @@ public abstract class FunctionCoordinator {
             @NonNull String name,
             @NonNull Character @NotNull [] parameters,
             @NonNull String expression,
-            @NonNull CommandContext<ServerCommandSource> ctx
+            CommandContext<ServerCommandSource> ctx
     ) throws CommandException {
 
         // Check that function name and expression are valid and don't already exist as a default function.

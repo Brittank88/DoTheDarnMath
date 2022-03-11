@@ -1,5 +1,7 @@
 package com.brittank88.dtdm.util.constant;
 
+import com.brittank88.dtdm.util.lang.LangUtils;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
@@ -36,14 +38,15 @@ public abstract class ConstantUtils {
         /**
          * Sends a {@link Constant}'s {@link String name} and {@link Double value} to the {@link ServerCommandSource command invoker}.
          *
-         * @param name The {@link String name} of the {@link Constant}.
-         * @param constants The {@link Collection <Constant>} of {@link Constant Constants}.
          * @param ctx The {@link CommandContext <ServerCommandSource>} of the command (for sending feedback to the {@link ServerCommandSource command invoker}).
+         * @param constants The {@link Collection <Constant>} of {@link Constant Constants}.
          * @return Status {@link Integer}.
          * @throws CommandException If the {@link Constant} could not be found.
          */
-        @SuppressWarnings("SameReturnValue")
-        public static @NonNull Integer sendConstant(@NonNull String name, @NonNull Collection<Constant> constants, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+        public static @NonNull Integer sendConstant(@NonNull CommandContext<ServerCommandSource> ctx, @NonNull Collection<Constant> constants) throws CommandException {
+
+            String name = StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.NAME);
+
             Double value = constants.stream()
                     .filter(c -> c.getConstantName().equals(name))
                     .map(Constant::getConstantValue)

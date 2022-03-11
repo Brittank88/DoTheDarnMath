@@ -23,8 +23,6 @@ public abstract class ConstantCommand {
 
     public static @NonNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
-        // FIXME: Constants cannot be referenced in calculation.
-
         @NonNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(LangUtils.CommonLang.Literal.GET);
         for (Map.Entry<ConstantCategory, Collection<Constant>> entry : ConstantCoordinator.CONSTANTS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
@@ -32,11 +30,7 @@ public abstract class ConstantCommand {
                             .suggests(new UniversalSuggestionProvider<>(ignored -> entry.getValue().stream()
                                     .map(Constant::getConstantName)
                                     .collect(Collectors.toList())
-                            )).executes(ctx -> ConstantUtils.CommandTools.sendConstant(
-                                    StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.NAME),
-                                    entry.getValue(),
-                                    ctx
-                            ))
+                            )).executes(ctx -> ConstantUtils.CommandTools.sendConstant(ctx, entry.getValue()))
                     )
             );
         }

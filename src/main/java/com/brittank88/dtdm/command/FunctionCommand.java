@@ -32,11 +32,7 @@ public abstract class FunctionCommand {
                             .suggests(new UniversalSuggestionProvider<>(ignored -> entry.getValue().stream()
                                     .map(Function::getFunctionName)
                                     .collect(Collectors.toList())
-                            )).executes(ctx -> FunctionUtils.CommandTools.sendFunction(
-                                    StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.NAME),
-                                    entry.getValue(),
-                                    ctx
-                            ))
+                            )).executes(ctx -> FunctionUtils.CommandTools.sendFunction(ctx, entry.getValue()))
                     )
             );
         }

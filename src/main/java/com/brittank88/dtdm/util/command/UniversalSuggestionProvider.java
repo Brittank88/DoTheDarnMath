@@ -30,12 +30,12 @@ public record UniversalSuggestionProvider<T>(@NonNull Function<CommandContext<T>
     /**
      * Builds and returns a {@link CompletableFuture<Suggestions>} containing all the {@link com.mojang.brigadier.suggestion.Suggestion Suggestions}.
      *
-     * @param context The {@link CommandContext} to apply to {@link com.mojang.brigadier.suggestion.Suggestion Suggestions}.
+     * @param ctx The {@link CommandContext} to apply to {@link com.mojang.brigadier.suggestion.Suggestion Suggestions}.
      * @param builder The {@link SuggestionsBuilder} to add {@link com.mojang.brigadier.suggestion.Suggestion Suggestions} to.
      * @return A built {@link CompletableFuture<Suggestions>} containing the {@link com.mojang.brigadier.suggestion.Suggestion Suggestions}.
      */
-    @Override public @NonNull CompletableFuture<@NonNull Suggestions> getSuggestions(CommandContext<T> context, @NotNull SuggestionsBuilder builder) {
-        this.suggestions.apply(context).forEach(builder::suggest);
+    @Override public @NonNull CompletableFuture<@NonNull Suggestions> getSuggestions(CommandContext<T> ctx, @NotNull SuggestionsBuilder builder) {
+        this.suggestions.apply(ctx).forEach(builder::suggest);
         return builder.buildFuture();
     }
 }

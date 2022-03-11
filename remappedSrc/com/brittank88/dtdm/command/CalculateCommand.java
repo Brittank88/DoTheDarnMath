@@ -16,22 +16,22 @@ public abstract class CalculateCommand {
 
         @NonNull LiteralArgumentBuilder<ServerCommandSource> calculateCommand = CommandManager.literal("calculate")
                 .then(CommandManager.argument("expression", StringArgumentType.string())
-                        .executes(context -> {  // Without selector.
-                            String expression = StringArgumentType.getString(context, "expression");
-                            context.getSource().sendFeedback(Text.of(expression + " = " + ExpressionHandler.calculateExpression(expression)), false);
+                        .executes(ctx -> {  // Without selector.
+                            String expression = StringArgumentType.getString(ctx, "expression");
+                            ctx.getSource().sendFeedback(Text.of(expression + " = " + ExpressionHandler.calculateExpression(expression)), false);
                             return 1;
                         })
                         .then(CommandManager.argument("targets", EntityArgumentType.players())
-                                .executes(context -> {  // With selector.
-                                    String expression = StringArgumentType.getString(context, "expression");
-                                    ServerCommandSource source = context.getSource();
+                                .executes(ctx -> {  // With selector.
+                                    String expression = StringArgumentType.getString(ctx, "expression");
+                                    ServerCommandSource source = ctx.getSource();
                                     ServerPlayerEntity playerEntity = source.getPlayer();
 
                                     // Send feedback to the player.
                                     source.sendFeedback(Text.of(expression + " = " + ExpressionHandler.calculateExpression(expression)), false);
 
                                     // Broadcast to players in the selector (excluding the player who issued the command).
-                                    EntityArgumentType.getPlayers(context, "targets")
+                                    EntityArgumentType.getPlayers(ctx, "targets")
                                             .stream().filter(target -> !target.equals(playerEntity))
                                             .forEach(player -> player.sendMessage(Text.of(
                                                     playerEntity.getDisplayName() + "calculated" + expression + " = " + ExpressionHandler.calculateExpression(expression)

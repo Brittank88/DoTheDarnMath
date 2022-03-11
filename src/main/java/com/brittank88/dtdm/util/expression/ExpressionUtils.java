@@ -2,8 +2,15 @@ package com.brittank88.dtdm.util.expression;
 
 import com.brittank88.dtdm.util.constant.ConstantUtils;
 import com.brittank88.dtdm.util.function.FunctionUtils;
+import com.brittank88.dtdm.util.lang.LangUtils;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.mariuszgromada.math.mxparser.Expression;
@@ -47,6 +54,41 @@ public abstract class ExpressionUtils {
             Expression expr;
             try { expr = new Expression(expression); } catch (Exception e) { throw new CommandException(Text.of(I18n.translate("message.error.expression.parse", e.getLocalizedMessage()))); }
             return calculateExpression(expr);
+        }
+
+        /**
+         * Sends the result of a calculation to the {@link ServerPlayerEntity player} via the provided {@link CommandContext<ServerCommandSource>}.
+         *
+         * @param ctx The {@link CommandContext<ServerCommandSource>} to send the result to.
+         * @return Command status integer.
+         * @throws CommandSyntaxException If the {@link String string expression} from the {@link CommandContext<ServerCommandSource>} fails to parse or calculate.
+         */
+        public static int sendCalculation(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+
+            // Send feedback to the player.
+            String expression = StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.EXPRESSION);
+            ctx.getSource().sendFeedback(Text.of(
+                    I18n.translate(
+                            "expression.withResult",
+                            expression,
+                            ExpressionUtils.CalculationTools.calculateExpression(expression)
+                    )), false);
+
+            // Broadcast to players in the selector (excluding the player who issued the command).
+            ServerPlayerEntity playerEntity = ctx.getSource().getPlayer();
+            try {
+                EntityArgumentType.getPlayers(ctx, LangUtils.CommonLang.Argument.TARGET)
+                        .stream().filter(target -> !target.equals(playerEntity))
+                        .forEach(player -> player.sendMessage(Text.of(I18n.translate(
+                                "commands.generic.calculate.broadcast",
+                                playerEntity.getDisplayName(),
+                                expression,
+                                ExpressionUtils.CalculationTools.calculateExpression(expression)
+                        )), false));
+            } catch (IllegalArgumentException ignored) {}
+
+            // Return command status integer.
+            return 1;
         }
     }
 }
