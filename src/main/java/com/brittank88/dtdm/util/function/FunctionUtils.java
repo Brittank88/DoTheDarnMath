@@ -1,6 +1,6 @@
 package com.brittank88.dtdm.util.function;
 
-import com.brittank88.dtdm.util.lang.LangUtils;
+import com.brittank88.dtdm.util.lang.CommonLang;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
@@ -93,7 +93,7 @@ public abstract class FunctionUtils {
          */
         public static @NonNull Integer sendFunction(@NonNull CommandContext<ServerCommandSource> ctx, @NonNull Collection<Function> functions) throws CommandException {
 
-            String name = StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.NAME);
+            String name = StringArgumentType.getString(ctx, CommonLang.Argument.NAME);
 
             Function function = functions.stream()
                     .filter(f -> f.getFunctionName().equals(name))

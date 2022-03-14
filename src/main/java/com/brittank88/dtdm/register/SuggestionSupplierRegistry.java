@@ -1,5 +1,6 @@
 package com.brittank88.dtdm.register;
 
+import com.brittank88.dtdm.client.DTDMClient;
 import com.brittank88.dtdm.event.callback.minecraft_client.MinecraftClientSetScreenCallback;
 import com.brittank88.dtdm.util.expression.ExpressionUtils;
 import com.brittank88.dtdm.util.suggestion.CommandSuggestorWrapper;
@@ -7,6 +8,7 @@ import com.brittank88.dtdm.util.suggestion.SuggestionSupplier;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.ActionResult;
@@ -87,5 +89,7 @@ public abstract class SuggestionSupplierRegistry {
 
             return ActionResult.PASS;
         });
+
+        DTDMClient.LOGGER.info(I18n.translate("logger.info.initialisation.suggestion_supplier_registry"));
     }
 }

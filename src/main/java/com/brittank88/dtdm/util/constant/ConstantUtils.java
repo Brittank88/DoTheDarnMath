@@ -1,6 +1,6 @@
 package com.brittank88.dtdm.util.constant;
 
-import com.brittank88.dtdm.util.lang.LangUtils;
+import com.brittank88.dtdm.util.lang.CommonLang;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
@@ -45,7 +45,7 @@ public abstract class ConstantUtils {
          */
         public static @NonNull Integer sendConstant(@NonNull CommandContext<ServerCommandSource> ctx, @NonNull Collection<Constant> constants) throws CommandException {
 
-            String name = StringArgumentType.getString(ctx, LangUtils.CommonLang.Argument.NAME);
+            String name = StringArgumentType.getString(ctx, CommonLang.Argument.NAME);
 
             Double value = constants.stream()
                     .filter(c -> c.getConstantName().equals(name))

@@ -2,7 +2,7 @@ package com.brittank88.dtdm.client;
 
 import com.brittank88.dtdm.register.CommandRegistry;
 import com.brittank88.dtdm.register.SuggestionSupplierRegistry;
-import com.brittank88.dtdm.util.lang.LangUtils;
+import com.brittank88.dtdm.util.lang.CommonLang;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,13 +14,18 @@ import org.apache.logging.log4j.Logger;
 public class DTDMClient implements ClientModInitializer {
 
     // TODO: Hack in complex numbers support???
+    // TODO: Extra support for unicode math symbols?
+
+    // TODO: Shadow mXparser.
+    // TODO: Expression ArgumentType.
 
     public static final String MOD_ID = "dtdm"; //NON-NLS
-    public static final Logger LOGGER = LogManager.getLogger(LangUtils.CommonLang.Literal.MOD_NAME);
+    public static final Logger LOGGER = LogManager.getLogger(CommonLang.Literal.MOD_NAME);
 
     @Override public void onInitializeClient() {
+        CommonLang.init();
         CommandRegistry.register();
         SuggestionSupplierRegistry.register();
-        LOGGER.info(I18n.translate("logger.info.initialisation.complete"));
+        LOGGER.info(I18n.translate("logger.info.initialisation.finalised"));
     }
 }
