@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screen.CommandSuggestor;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.ActionResult;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ public class CommandSuggestorWrapper {
     };
 
     // Internal properties.
-    private @NonNull ChatScreen chatScreen;
+    private @NotNull ChatScreen chatScreen;
 
     private @Nullable CommandSuggestor.SuggestionWindow suggestionWindow;
 
@@ -51,7 +51,7 @@ public class CommandSuggestorWrapper {
      * @param chatScreen The {@link ChatScreen} instance used in the creation or updating of the {@link CommandSuggestorWrapper} instance.
      * @return The {@link CommandSuggestorWrapper} instance.
      */
-    public static @NonNull CommandSuggestorWrapper getOrCreate(@NotNull ChatScreen chatScreen) {
+    public static @NotNull CommandSuggestorWrapper getOrCreate(@NotNull ChatScreen chatScreen) {
         if (INSTANCE == null) return new CommandSuggestorWrapper(chatScreen);
 
         INSTANCE.chatScreen = chatScreen;
@@ -75,7 +75,7 @@ public class CommandSuggestorWrapper {
      *
      * @param chatScreen The {@link ChatScreen} instance to wrap.
      */
-    private CommandSuggestorWrapper(@NonNull ChatScreen chatScreen) {
+    private CommandSuggestorWrapper(@NotNull ChatScreen chatScreen) {
 
         // Set internal properties from provided.
         this.chatScreen = chatScreen;
@@ -95,7 +95,7 @@ public class CommandSuggestorWrapper {
      * @return The {@link CommandSuggestor.SuggestionWindow} instance.
      * @throws IllegalArgumentException If the {@link Collection} of {@link Suggestion}s is empty.
      */
-    private @NonNull CommandSuggestor.SuggestionWindow prepareSuggestionsWindow(@NonNull List<Suggestion> suggestions) throws IllegalArgumentException {
+    private @NotNull CommandSuggestor.SuggestionWindow prepareSuggestionsWindow(@NotNull List<Suggestion> suggestions) throws IllegalArgumentException {
         if (suggestions.isEmpty()) throw new IllegalArgumentException("No Suggestion instances were present in the suggestions list!");
         return SuggestionUtils.createSuggestionWindow(
                 this.chatScreen,
@@ -131,7 +131,7 @@ public class CommandSuggestorWrapper {
      * @param supplier The {@link SuggestionSupplier} to add.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public @NotNull CommandSuggestorWrapper addSupplier(@NonNull SuggestionSupplier supplier) { this.SuggestionSuppliers.add(supplier); return this; }
+    public @NotNull CommandSuggestorWrapper addSupplier(@NotNull SuggestionSupplier supplier) { this.SuggestionSuppliers.add(supplier); return this; }
 
     /**
      * Adds multiple {@link SuggestionSupplier}s to the {@link CommandSuggestorWrapper} instance.
@@ -139,7 +139,7 @@ public class CommandSuggestorWrapper {
      * @param suppliers The {@link SuggestionSupplier}s to add.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public @NotNull CommandSuggestorWrapper addSuppliers(@NonNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.addAll(List.of(suppliers)); return this; }
+    public @NotNull CommandSuggestorWrapper addSuppliers(@NotNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.addAll(List.of(suppliers)); return this; }
 
     /**
      * Removes a {@link SuggestionSupplier} from the {@link CommandSuggestorWrapper} instance.
@@ -147,7 +147,7 @@ public class CommandSuggestorWrapper {
      * @param supplier The {@link SuggestionSupplier} to remove.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public @NotNull CommandSuggestorWrapper removeSupplier(@NonNull SuggestionSupplier supplier) { this.SuggestionSuppliers.remove(supplier); return this; }
+    public @NotNull CommandSuggestorWrapper removeSupplier(@NotNull SuggestionSupplier supplier) { this.SuggestionSuppliers.remove(supplier); return this; }
 
     /**
      * Removes multiple {@link SuggestionSupplier}s from the {@link CommandSuggestorWrapper} instance.
@@ -155,7 +155,7 @@ public class CommandSuggestorWrapper {
      * @param suppliers The {@link SuggestionSupplier}s to remove.
      * @return The {@link CommandSuggestorWrapper} instance for method chaining.
      */
-    public @NotNull CommandSuggestorWrapper removeSuppliers(@NonNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.removeAll(List.of(suppliers)); return this; }
+    public @NotNull CommandSuggestorWrapper removeSuppliers(@NotNull SuggestionSupplier... suppliers) { this.SuggestionSuppliers.removeAll(List.of(suppliers)); return this; }
 
     //#// Event Callbacks //#//
 

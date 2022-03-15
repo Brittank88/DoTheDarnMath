@@ -7,7 +7,8 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.mathcollection.AstronomicalConstants;
 import org.mariuszgromada.math.mxparser.mathcollection.MathConstants;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public abstract class ConstantCoordinator {
 
     /** {@link ImmutableMap} of all {@link Constant Constants}, keyed by {@link ConstantCategory}. **/
-    public static final @NonNull ImmutableMap<@NonNull ConstantCategory, @NonNull Collection<@NonNull Constant>> CONSTANTS = ImmutableMap.ofEntries(
+    public static final @NotNull ImmutableMap<@NotNull ConstantCategory, @NotNull Collection<@NotNull Constant>> CONSTANTS = ImmutableMap.ofEntries(
             new AbstractMap.SimpleImmutableEntry<>(ConstantCategory.USER        , new ArrayList<>()),
             new AbstractMap.SimpleImmutableEntry<>(ConstantCategory.MATHEMATICAL, ConstantUtils.ClassTools.getConstantsFromClasses(MathConstants.class)),
             new AbstractMap.SimpleImmutableEntry<>(ConstantCategory.ASTRONOMICAL, ConstantUtils.ClassTools.getConstantsFromClasses(AstronomicalConstants.class)),
@@ -31,7 +32,7 @@ public abstract class ConstantCoordinator {
      *
      * @return A {@link Collection<Constant>} of all default {@link Constant Constants}.
      */
-    public static @NonNull Collection<@NonNull Constant> getAllDefaultConstants() {
+    public static @NotNull Collection<@NotNull Constant> getAllDefaultConstants() {
         return CONSTANTS.entrySet().stream()
                 .filter(e -> e.getKey().isDefault())
                 .map(Map.Entry::getValue)
@@ -44,7 +45,7 @@ public abstract class ConstantCoordinator {
      *
      * @return A {@link Collection<Constant>} of user-defined {@link Constant Constants}.
      */
-    public static @NonNull Collection<@NonNull Constant> getUserConstants() { return Objects.requireNonNull(CONSTANTS.get(ConstantCategory.USER)); }
+    public static @NotNull Collection<@NotNull Constant> getUserConstants() { return Objects.requireNonNull(CONSTANTS.get(ConstantCategory.USER)); }
 
     /**
      * Returns a {@link Collection<Constant>} of all {@link Constant Constants}, user-defined or not.
@@ -52,7 +53,7 @@ public abstract class ConstantCoordinator {
      * @return A {@link Collection<Constant>} of all {@link Constant Constants}.
      */
     @SuppressWarnings("unused")
-    public static @NonNull Collection<@NonNull Constant> getAllConstants() { return CONSTANTS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
+    public static @NotNull Collection<@NotNull Constant> getAllConstants() { return CONSTANTS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
 
     /**
      * Adds a {@link Constant} to the {@link Collection<Constant>} of user-defined {@link Constant Constants}.
@@ -64,7 +65,7 @@ public abstract class ConstantCoordinator {
      * @throws CommandException If the function {@link String name} is invalid, or the {@link String name} references a default {@link Constant}.
      */
     @SuppressWarnings("SameReturnValue")
-    public static @NonNull Integer addConstant(@NonNull String name, double value, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer addConstant(@NotNull String name, double value, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
 
         // Check that constant name is valid and doesn't already exist as a default constant.
         if (name.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.empty")));
@@ -96,7 +97,7 @@ public abstract class ConstantCoordinator {
      * @throws CommandException If the {@link String name} references a default {@link Constant} or none at all.
      */
     @SuppressWarnings("SameReturnValue")
-    public static @NonNull Integer removeConstant(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer removeConstant(@NotNull String name, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.constant.remove_default", name)));
         if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name)));
 

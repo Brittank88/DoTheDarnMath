@@ -17,7 +17,6 @@ public class DTDMClient implements ClientModInitializer {
     // TODO: Extra support for unicode math symbols?
 
     // TODO: Shadow mXparser.
-    // TODO: Expression ArgumentType.
 
     public static final String MOD_ID = "dtdm"; //NON-NLS
     public static final Logger LOGGER = LogManager.getLogger(CommonLang.Literal.MOD_NAME);

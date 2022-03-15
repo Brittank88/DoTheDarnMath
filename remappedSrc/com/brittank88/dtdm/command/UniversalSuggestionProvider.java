@@ -4,7 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -16,14 +16,14 @@ import java.util.function.Function;
  * @author Brittank88
  * @param <T> The type of the command source.
  */
-public record UniversalSuggestionProvider<T>(@NonNull Function<CommandContext<T>, Iterable<String>> suggestions) implements SuggestionProvider<T> {
+public record UniversalSuggestionProvider<T>(@NotNull Function<CommandContext<T>, Iterable<String>> suggestions) implements SuggestionProvider<T> {
 
     /**
      * Constructor for a {@link UniversalSuggestionProvider}.
      *
      * @param suggestions The {@link Iterable<String>}<{@link String}> to use as suggestions.
      */
-    public UniversalSuggestionProvider(@NonNull Function<@NonNull CommandContext<T>, @NonNull Iterable<@NonNull String>> suggestions) { this.suggestions = suggestions; }
+    public UniversalSuggestionProvider(@NotNull Function<@NotNull CommandContext<T>, @NotNull Iterable<@NotNull String>> suggestions) { this.suggestions = suggestions; }
 
     /**
      * Builds and returns a {@link CompletableFuture<Suggestions>} containing all the {@link com.mojang.brigadier.suggestion.Suggestion Suggestions}.
@@ -32,7 +32,7 @@ public record UniversalSuggestionProvider<T>(@NonNull Function<CommandContext<T>
      * @param builder The {@link SuggestionsBuilder} to add {@link com.mojang.brigadier.suggestion.Suggestion Suggestions} to.
      * @return A built {@link CompletableFuture<Suggestions>} containing the {@link com.mojang.brigadier.suggestion.Suggestion Suggestions}.
      */
-    @Override public @NonNull CompletableFuture<@NonNull Suggestions> getSuggestions(CommandContext<T> ctx, SuggestionsBuilder builder) {
+    @Override public @NotNull CompletableFuture<@NotNull Suggestions> getSuggestions(CommandContext<T> ctx, SuggestionsBuilder builder) {
         this.suggestions.apply(ctx).forEach(builder::suggest);
         return builder.buildFuture();
     }

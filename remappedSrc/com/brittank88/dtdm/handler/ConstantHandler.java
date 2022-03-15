@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Function;
 import org.mariuszgromada.math.mxparser.mathcollection.AstronomicalConstants;
@@ -40,7 +40,7 @@ public abstract class ConstantHandler {
     }
 
     /** {@link ImmutableMap} of all {@link Constant Constants}, keyed by {@link CONSTANT_CATEGORY}. **/
-    public static final @NonNull ImmutableMap<@NonNull CONSTANT_CATEGORY, @NonNull Collection<@NonNull Constant>> CONSTANTS = ImmutableMap.ofEntries(
+    public static final @NotNull ImmutableMap<@NotNull CONSTANT_CATEGORY, @NotNull Collection<@NotNull Constant>> CONSTANTS = ImmutableMap.ofEntries(
             new AbstractMap.SimpleImmutableEntry<>(CONSTANT_CATEGORY.USER        , new ArrayList<>()),
             new AbstractMap.SimpleImmutableEntry<>(CONSTANT_CATEGORY.MATHEMATICAL, getConstantsFromClasses(MathConstants.class)),
             new AbstractMap.SimpleImmutableEntry<>(CONSTANT_CATEGORY.ASTRONOMICAL, getConstantsFromClasses(AstronomicalConstants.class)),
@@ -52,7 +52,7 @@ public abstract class ConstantHandler {
      *
      * @return A {@link Collection<Constant>} of all default {@link Constant Constants}.
      */
-    public static @NonNull Collection<@NonNull Constant> getAllDefaultConstants() {
+    public static @NotNull Collection<@NotNull Constant> getAllDefaultConstants() {
         return CONSTANTS.entrySet().stream()
                 .filter(e -> e.getKey().isDefault())
                 .map(Map.Entry::getValue)
@@ -65,14 +65,14 @@ public abstract class ConstantHandler {
      *
      * @return A {@link Collection<Constant>} of user-defined {@link Constant Constants}.
      */
-    public static @NonNull Collection<@NonNull Constant> getUserConstants() { return Objects.requireNonNull(CONSTANTS.get(CONSTANT_CATEGORY.USER)); }
+    public static @NotNull Collection<@NotNull Constant> getUserConstants() { return Objects.requireNonNull(CONSTANTS.get(CONSTANT_CATEGORY.USER)); }
 
     /**
      * Returns a {@link Collection<Constant>} of all {@link Constant Constants}, user-defined or not.
      *
      * @return A {@link Collection<Constant>} of all {@link Constant Constants}.
      */
-    public static @NonNull Collection<@NonNull Constant> getAllConstants() { return CONSTANTS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
+    public static @NotNull Collection<@NotNull Constant> getAllConstants() { return CONSTANTS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
 
     /**
      * Adds a {@link Constant} to the {@link Collection<Constant>} of user-defined {@link Constant Constants}.
@@ -83,7 +83,7 @@ public abstract class ConstantHandler {
      * @return Status {@link Integer}.
      * @throws CommandException If the function {@link String name} is invalid, or the {@link String name} references a default {@link Constant}.
      */
-    public static @NonNull Integer addConstant(@NonNull String name, double value, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer addConstant(@NotNull String name, double value, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (name.isEmpty()) throw new CommandException(Text.of("Name cannot be empty"));
         if (name.contains(" ")) throw new CommandException(Text.of("Function name cannot contain spaces"));
         if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Cannot override default constant: " + name));
@@ -108,7 +108,7 @@ public abstract class ConstantHandler {
      * @return Status {@link Integer}.
      * @throws CommandException If the {@link String name} references a default {@link Constant} or none at all.
      */
-    public static @NonNull Integer removeConstant(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer removeConstant(@NotNull String name, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Cannot remove default constant: " + name));
         if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of("Nonexistent: " + name));
 
@@ -128,7 +128,7 @@ public abstract class ConstantHandler {
      * @return Status {@link Integer}.
      * @throws CommandException If the {@link Constant} could not be found.
      */
-    public static @NonNull Integer sendConstant(@NonNull String name, @NonNull Collection<Constant> constants, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer sendConstant(@NotNull String name, @NotNull Collection<Constant> constants, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         Double value = constants.stream()
                 .filter(c -> c.getConstantName().equals(name))
                 .map(Constant::getConstantValue)
@@ -139,7 +139,7 @@ public abstract class ConstantHandler {
         return 1;
     }
 
-    private static @NonNull Collection<@NonNull Constant> getConstantsFromClasses(@NonNull Class<?>... classes) {
+    private static @NotNull Collection<@NotNull Constant> getConstantsFromClasses(@NotNull Class<?>... classes) {
         Collection<Constant> constants = new ArrayList<>(classes.length);
         for (Class<?> c : classes) {
             for (Field f : c.getDeclaredFields()) {

@@ -29,14 +29,14 @@ public class FunctionParametersArgumentType implements ArgumentType<Character[]>
     private static final Pair<Character, Character> BRACES = new Pair<>('(', ')');
     private static @NotNull String appendBraces(String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
 
-    private static final SimpleCommandExceptionType INVALID_PARAM_EXCEPTION = new SimpleCommandExceptionType(Text.of(I18n.translate("message.error.custom_param.generic.invalid")));
+    private static final SimpleCommandExceptionType INVALID_PARAM_EXCEPTION = new SimpleCommandExceptionType(Text.of(I18n.translate("message.error.function.invalid_parameters")));
 
     public static @NotNull FunctionParametersArgumentType functionParameters() { return new FunctionParametersArgumentType(); }
 
-    public static Character[] getFunctionParams(CommandContext<ServerCommandSource> ctx, String name) { return ctx.getArgument(name, Character[].class); }
+    public static Character[] getFunctionParameters(CommandContext<ServerCommandSource> ctx, String name) { return ctx.getArgument(name, Character[].class); }
 
     @Override
-    public Character @NotNull [] parse(@NotNull StringReader reader) throws CommandSyntaxException {
+    public @NotNull Character[] parse(@NotNull StringReader reader) throws CommandSyntaxException {
 
         if (!reader.canRead() || reader.read() != BRACES.getLeft()) throw INVALID_PARAM_EXCEPTION.create();
         else {

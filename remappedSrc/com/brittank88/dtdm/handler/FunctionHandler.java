@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Function;
 import org.mariuszgromada.math.mxparser.FunctionExtension;
@@ -46,7 +46,7 @@ public abstract class FunctionHandler {
     }
 
     /** {@link ImmutableMap} of all {@link Function Functions}, keyed by {@link FUNCTION_CATEGORY}. **/
-    public static final @NonNull ImmutableMap<@NonNull FUNCTION_CATEGORY, @NonNull Collection<@NonNull Function>> FUNCTIONS = ImmutableMap.ofEntries(
+    public static final @NotNull ImmutableMap<@NotNull FUNCTION_CATEGORY, @NotNull Collection<@NotNull Function>> FUNCTIONS = ImmutableMap.ofEntries(
             new AbstractMap.SimpleImmutableEntry<>(FUNCTION_CATEGORY.USER                     , new ArrayList<>()),
             new AbstractMap.SimpleImmutableEntry<>(FUNCTION_CATEGORY.BINARY_RELATIONS         , getFunctionsFromClasses(BinaryRelations.class)),
             new AbstractMap.SimpleImmutableEntry<>(FUNCTION_CATEGORY.BOOLEAN_ALGEBRA          , getFunctionsFromClasses(BooleanAlgebra.class)),
@@ -66,7 +66,7 @@ public abstract class FunctionHandler {
      *
      * @return A {@link Collection<Function>} of all default {@link Function Functions}.
      */
-    public static @NonNull Collection<@NonNull Function> getAllDefaultFunctions() {
+    public static @NotNull Collection<@NotNull Function> getAllDefaultFunctions() {
         return FUNCTIONS.entrySet().stream()
                 .filter(e -> e.getKey().isDefault())
                 .map(Map.Entry::getValue)
@@ -79,14 +79,14 @@ public abstract class FunctionHandler {
      *
      * @return A {@link Collection<Function>} of user-defined {@link Function Functions}.
      */
-    public static @NonNull Collection<@NonNull Function> getUserFunctions() { return Objects.requireNonNull(FUNCTIONS.get(FUNCTION_CATEGORY.USER)); }
+    public static @NotNull Collection<@NotNull Function> getUserFunctions() { return Objects.requireNonNull(FUNCTIONS.get(FUNCTION_CATEGORY.USER)); }
 
     /**
      * Returns a {@link Collection<Function>} of all {@link Function Functions}, user-defined or not.
      *
      * @return A {@link Collection<Function>} of all {@link Function Functions}.
      */
-    public static @NonNull Collection<@NonNull Function> getAllFunctions() { return FUNCTIONS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
+    public static @NotNull Collection<@NotNull Function> getAllFunctions() { return FUNCTIONS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
 
     /**
      * Adds a {@link Function} to the {@link Collection<Function>} of user-defined {@link Function Functions}.
@@ -98,7 +98,7 @@ public abstract class FunctionHandler {
      * @return Status {@link Integer}.
      * @throws CommandException If the function {@link String name} or {@link String expression} is invalid, or the {@link String name} references a default {@link Function}.
      */
-    public static @NonNull Integer addFunction(@NonNull String name, @NonNull String expression, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer addFunction(@NotNull String name, @NotNull String expression, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
 
         // Check that function name and expression are valid and don't already exist as a default function.
         if (name.isEmpty()) throw new CommandException(Text.of("Function name cannot be empty"));
@@ -132,7 +132,7 @@ public abstract class FunctionHandler {
      * @return Status {@link Integer}.
      * @throws CommandException If the {@link String name} is invalid or references a default {@link Function}.
      */
-    public static @NonNull Integer removeFunction(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer removeFunction(@NotNull String name, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (name.isEmpty()) throw new CommandException(Text.of("Function name cannot be empty"));
         if (name.contains(" ")) throw new CommandException(Text.of("Function name cannot contain spaces"));
         if (getAllDefaultFunctions().stream().anyMatch(f -> f.getFunctionName().equals(name))) throw new CommandException(Text.of("Cannot remove default function: " + name));
@@ -153,7 +153,7 @@ public abstract class FunctionHandler {
      * @return Status {@link Integer}.
      * @throws CommandException If the {@link Function} could not be found.
      */
-    public static @NonNull Integer sendFunction(@NonNull String name, @NonNull Collection<Function> functions, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer sendFunction(@NotNull String name, @NotNull Collection<Function> functions, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         Function function = functions.stream()
                 .filter(f -> f.getFunctionName().equals(name))
                 .findFirst().orElseThrow(() -> new CommandException(Text.of("Nonexistent: " + name)));
@@ -173,7 +173,7 @@ public abstract class FunctionHandler {
      * @param classes {@link Class Classes} to get {@link Function Functions} from.
      * @return A {@link Collection<Function>} of {@link Function Functions}.
      */
-    private static @NonNull Collection<@NonNull Function> getFunctionsFromClasses(@NonNull Class<?>... classes) {
+    private static @NotNull Collection<@NotNull Function> getFunctionsFromClasses(@NotNull Class<?>... classes) {
         Collection<Function> functions = new ArrayList<>(classes.length);
         for (Class<?> c : classes) {
             for (Method m : c.getDeclaredMethods()) {
@@ -191,10 +191,10 @@ public abstract class FunctionHandler {
      */
     private static class FunctionExtensionMethodWrapper implements FunctionExtension, Cloneable {
 
-        private final @NonNull Method method;
-        private final @NonNull List<AbstractMap.SimpleEntry<@NonNull String, @NonNull OptionalDouble>> parameters;
+        private final @NotNull Method method;
+        private final @NotNull List<AbstractMap.SimpleEntry<@NotNull String, @NotNull OptionalDouble>> parameters;
 
-        public FunctionExtensionMethodWrapper(@NonNull Method method) {
+        public FunctionExtensionMethodWrapper(@NotNull Method method) {
             this.method = method;
             this.parameters = Arrays.stream(method.getParameters())
                     .map(p -> new AbstractMap.SimpleEntry<>(p.getName(), OptionalDouble.empty()))
@@ -203,7 +203,7 @@ public abstract class FunctionHandler {
 
         @Override public int getParametersNumber() { return parameters.size(); }
         @Override public void setParameterValue(int parameterIndex, double parameterValue) { parameters.get(parameterIndex).setValue(OptionalDouble.of(parameterValue)); }
-        @Override public @NonNull String getParameterName(int parameterIndex) { return parameters.get(parameterIndex).getKey(); }
+        @Override public @NotNull String getParameterName(int parameterIndex) { return parameters.get(parameterIndex).getKey(); }
 
         @Override public double calculate() throws RuntimeException {
             if (parameters.stream().anyMatch(p -> p.getValue().isEmpty())) throw new RuntimeException("Missing parameter value.");
@@ -211,7 +211,7 @@ public abstract class FunctionHandler {
             catch (IllegalAccessException | InvocationTargetException e) { throw new RuntimeException(e); }
         }
 
-        @Override public @NonNull FunctionExtension clone() throws RuntimeException {
+        @Override public @NotNull FunctionExtension clone() throws RuntimeException {
             try { return (FunctionExtensionMethodWrapper) super.clone(); } catch (CloneNotSupportedException e) { throw new RuntimeException(e); }
         }
     }

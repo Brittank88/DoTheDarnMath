@@ -1,6 +1,7 @@
 package com.brittank88.dtdm.util.function;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Function;
 import org.mariuszgromada.math.mxparser.FunctionExtension;
 
@@ -18,10 +19,10 @@ import java.util.stream.Collectors;
  */
 class FunctionExtensionMethodWrapper implements FunctionExtension, Cloneable {
 
-    private final @NonNull Method method;
-    private final @NonNull List<AbstractMap.SimpleEntry<@NonNull String, @NonNull OptionalDouble>> parameters;
+    private final @NotNull Method method;
+    private final @NotNull List<AbstractMap.SimpleEntry<@NotNull String, @NotNull OptionalDouble>> parameters;
 
-    public FunctionExtensionMethodWrapper(@NonNull Method method) {
+    public FunctionExtensionMethodWrapper(@NotNull Method method) {
         this.method = method;
         this.parameters = Arrays.stream(method.getParameters())
                 .map(p -> new AbstractMap.SimpleEntry<>(p.getName(), OptionalDouble.empty()))
@@ -39,7 +40,7 @@ class FunctionExtensionMethodWrapper implements FunctionExtension, Cloneable {
     }
 
     @Override
-    public @NonNull String getParameterName(int parameterIndex) {
+    public @NotNull String getParameterName(int parameterIndex) {
         return parameters.get(parameterIndex).getKey();
     }
 
@@ -54,7 +55,7 @@ class FunctionExtensionMethodWrapper implements FunctionExtension, Cloneable {
     }
 
     @Override
-    public @NonNull FunctionExtension clone() throws RuntimeException {
+    public @NotNull FunctionExtension clone() throws RuntimeException {
         try {
             return (FunctionExtensionMethodWrapper) super.clone();
         } catch (CloneNotSupportedException e) {

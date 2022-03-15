@@ -8,13 +8,13 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 
 public abstract class CalculateCommand {
 
-    public static @NonNull LiteralArgumentBuilder<ServerCommandSource> build() {
+    public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> calculateCommand = CommandManager.literal("calculate")
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> calculateCommand = CommandManager.literal("calculate")
                 .then(CommandManager.argument("expression", StringArgumentType.string())
                         .executes(ctx -> {  // Without selector.
                             String expression = StringArgumentType.getString(ctx, "expression");

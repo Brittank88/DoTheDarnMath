@@ -12,7 +12,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.Collection;
@@ -21,11 +22,11 @@ import java.util.stream.Collectors;
 
 public abstract class FunctionCommand {
 
-    public static @NonNull LiteralArgumentBuilder<ServerCommandSource> build() {
+    public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
         // TODO: Support optional function description.
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(CommonLang.Literal.GET);
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(CommonLang.Literal.GET);
         for (Map.Entry<FunctionCategory, Collection<Function>> entry : FunctionCoordinator.FUNCTIONS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(CommonLang.Argument.NAME, StringArgumentType.word())
@@ -37,7 +38,7 @@ public abstract class FunctionCommand {
             );
         }
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(CommonLang.Literal.ADD)
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(CommonLang.Literal.ADD)
                 .then(CommandManager.argument(CommonLang.Argument.NAME, StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
                                 I18n.translate("commands.dtdm.function.add.argument.name.suggest_prefix"), FunctionCoordinator.getUserFunctions().size(), 3)
@@ -45,7 +46,7 @@ public abstract class FunctionCommand {
                                 .then(CommandManager.argument(CommonLang.Argument.EXPRESSION, StringArgumentType.greedyString())
                                         .executes(ctx -> FunctionCoordinator.addFunction(
                                                 StringArgumentType.getString(ctx, CommonLang.Argument.NAME),
-                                                FunctionParametersArgumentType.getFunctionParams(ctx, CommonLang.Argument.PARAMETERS),
+                                                FunctionParametersArgumentType.getFunctionParameters(ctx, CommonLang.Argument.PARAMETERS),
                                                 StringArgumentType.getString(ctx, CommonLang.Argument.EXPRESSION),
                                                 ctx
                                         ))
@@ -53,7 +54,7 @@ public abstract class FunctionCommand {
                         )
                 );
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(CommonLang.Literal.REMOVE)
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(CommonLang.Literal.REMOVE)
                 .then(CommandManager.argument(CommonLang.Argument.NAME, StringArgumentType.word())
                         .executes(ctx -> FunctionCoordinator.removeFunction(StringArgumentType.getString(ctx, CommonLang.Argument.NAME), ctx))
                 );

@@ -3,12 +3,10 @@ package com.brittank88.dtdm.util.function;
 import com.brittank88.dtdm.util.constant.ConstantCoordinator;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Function;
 import org.mariuszgromada.math.mxparser.mathcollection.*;
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
 public abstract class FunctionCoordinator {
 
     /** {@link ImmutableMap} of all {@link Function Functions}, keyed by {@link FunctionCategory}. **/
-    public static final @NonNull ImmutableMap<@NonNull FunctionCategory, @NonNull Collection<@NonNull Function>> FUNCTIONS = ImmutableMap.ofEntries(
+    public static final @NotNull ImmutableMap<@NotNull FunctionCategory, @NotNull Collection<@NotNull Function>> FUNCTIONS = ImmutableMap.ofEntries(
             new AbstractMap.SimpleImmutableEntry<>(FunctionCategory.USER                     , new ArrayList<>()),
             new AbstractMap.SimpleImmutableEntry<>(FunctionCategory.BINARY_RELATIONS         , FunctionUtils.ClassTools.getFunctionsFromClasses(BinaryRelations.class)),
             new AbstractMap.SimpleImmutableEntry<>(FunctionCategory.BOOLEAN_ALGEBRA          , FunctionUtils.ClassTools.getFunctionsFromClasses(BooleanAlgebra.class)),
@@ -39,7 +37,7 @@ public abstract class FunctionCoordinator {
      *
      * @return A {@link Collection<Function>} of all default {@link Function Functions}.
      */
-    public static @NonNull Collection<@NonNull Function> getAllDefaultFunctions() {
+    public static @NotNull Collection<@NotNull Function> getAllDefaultFunctions() {
         return FUNCTIONS.entrySet().stream()
                 .filter(e -> e.getKey().isDefault())
                 .map(Map.Entry::getValue)
@@ -52,7 +50,7 @@ public abstract class FunctionCoordinator {
      *
      * @return A {@link Collection<Function>} of user-defined {@link Function Functions}.
      */
-    public static @NonNull Collection<@NonNull Function> getUserFunctions() { return Objects.requireNonNull(FUNCTIONS.get(FunctionCategory.USER)); }
+    public static @NotNull Collection<@NotNull Function> getUserFunctions() { return Objects.requireNonNull(FUNCTIONS.get(FunctionCategory.USER)); }
 
     /**
      * Returns a {@link Collection<Function>} of all {@link Function Functions}, user-defined or not.
@@ -60,7 +58,7 @@ public abstract class FunctionCoordinator {
      * @return A {@link Collection<Function>} of all {@link Function Functions}.
      */
     @SuppressWarnings("unused")
-    public static @NonNull Collection<@NonNull Function> getAllFunctions() { return FUNCTIONS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
+    public static @NotNull Collection<@NotNull Function> getAllFunctions() { return FUNCTIONS.values().stream().flatMap(Collection::stream).collect(Collectors.toList()); }
 
     /**
      * Adds a {@link Function} to the {@link Collection<Function>} of user-defined {@link Function Functions}.
@@ -74,10 +72,10 @@ public abstract class FunctionCoordinator {
      * @throws CommandException If the function {@link String name} or {@link String expression} is invalid, or the {@link String name} references a default {@link Function}.
      */
     @SuppressWarnings("SameReturnValue")
-    public static @NonNull Integer addFunction(
-            @NonNull String name,
-            @NonNull Character @NotNull [] parameters,
-            @NonNull String expression,
+    public static @NotNull Integer addFunction(
+            @NotNull String name,
+            @NotNull Character @NotNull [] parameters,
+            @NotNull String expression,
             CommandContext<ServerCommandSource> ctx
     ) throws CommandException {
 
@@ -134,7 +132,7 @@ public abstract class FunctionCoordinator {
      * @throws CommandException If the {@link String name} is invalid or references a default {@link Function}.
      */
     @SuppressWarnings("SameReturnValue")
-    public static @NonNull Integer removeFunction(@NonNull String name, @NonNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer removeFunction(@NotNull String name, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (name.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.empty")));
         if (name.contains(" ")) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.spaces")));
         if (getAllDefaultFunctions().stream().anyMatch(f -> f.getFunctionName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.function.remove_default", name)));

@@ -15,22 +15,22 @@ public abstract class CommonLang {
 
         private static void init() { DTDMClient.LOGGER.info(I18n.translate("logger.info.initialisation.common_lang.literal")); }
 
-        public static String
-                MOD_NAME = I18n.translate("mod.displayName"),
-                ADD      = I18n.translate("commands.generic.literal.add"),
-                REMOVE   = I18n.translate("commands.generic.literal.remove"),
-                GET      = I18n.translate("commands.generic.literal.get");
+        public static final String
+                MOD_NAME = I18n.translate("mod.displayName");
+        public static final String ADD      = I18n.translate("commands.generic.literal.add");
+        public static final String REMOVE   = I18n.translate("commands.generic.literal.remove");
+        public static final String GET      = I18n.translate("commands.generic.literal.get");
     }
 
     public abstract static class Argument {
 
         private static void init() { DTDMClient.LOGGER.info(I18n.translate("logger.info.initialisation.common_lang.argument")); }
 
-        public static String
-                NAME       = I18n.translate("commands.generic.argument.name"),
-                VALUE      = I18n.translate("commands.generic.argument.value"),
-                PARAMETERS = I18n.translate("commands.generic.argument.parameters"),
-                EXPRESSION = I18n.translate("commands.generic.argument.expression"),
-                TARGET     = I18n.translate("commands.generic.argument.target");
+        public static final String
+                NAME       = I18n.translate("commands.generic.argument.name");
+        public static final String VALUE      = I18n.translate("commands.generic.argument.value");
+        public static final String PARAMETERS = I18n.translate("commands.generic.argument.parameters");
+        public static final String EXPRESSION = I18n.translate("commands.generic.argument.expression");
+        public static final String TARGET     = I18n.translate("commands.generic.argument.target");
     }
 }

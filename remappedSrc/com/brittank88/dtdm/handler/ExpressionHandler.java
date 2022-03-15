@@ -2,7 +2,7 @@ package com.brittank88.dtdm.handler;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 import org.mariuszgromada.math.mxparser.Expression;
 
 public abstract class ExpressionHandler {
@@ -14,7 +14,7 @@ public abstract class ExpressionHandler {
      * @return The result of the {@link String string expression}.
      * @throws CommandException If {@link Expression} fails to parse or calculate the {@link String string expression}.
      */
-    public static @NonNull Double calculateExpression(@NonNull String expression) throws CommandException {
+    public static @NotNull Double calculateExpression(@NotNull String expression) throws CommandException {
         Expression expr;
         try { expr = new Expression(expression); } catch (Exception e) { throw new CommandException(Text.of("Failed to parse expression:\n" + e.getLocalizedMessage())); }
 

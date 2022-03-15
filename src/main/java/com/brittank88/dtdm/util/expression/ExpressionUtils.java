@@ -12,7 +12,8 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 
 public abstract class ExpressionUtils {
@@ -26,7 +27,7 @@ public abstract class ExpressionUtils {
          * @return The result of the {@link Expression}.
          * @throws CommandException If the {@link Expression} fails to parse or calculate.
          */
-        public static @NonNull Double calculateExpression(@NonNull Expression expression) throws CommandException {
+        public static @NotNull Double calculateExpression(@NotNull Expression expression) throws CommandException {
 
             // Add all missing user-defined constants and functions.
             try {
@@ -50,7 +51,7 @@ public abstract class ExpressionUtils {
          * @return The result of the {@link String expression string}.
          * @throws CommandException If the {@link String string expression} fails to parse or calculate.
          */
-        public static @NonNull Double calculateExpression(@NonNull String expression) throws CommandException {
+        public static @NotNull Double calculateExpression(@NotNull String expression) throws CommandException {
             Expression expr;
             try { expr = new Expression(expression); } catch (Exception e) { throw new CommandException(Text.of(I18n.translate("message.error.expression.parse", e.getLocalizedMessage()))); }
             return calculateExpression(expr);
@@ -63,6 +64,7 @@ public abstract class ExpressionUtils {
          * @return Command status integer.
          * @throws CommandSyntaxException If the {@link String string expression} from the {@link CommandContext<ServerCommandSource>} fails to parse or calculate.
          */
+        @SuppressWarnings("SameReturnValue")
         public static int sendCalculation(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
 
             // Send feedback to the player.

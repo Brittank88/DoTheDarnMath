@@ -7,7 +7,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Expression;
@@ -20,7 +20,7 @@ public abstract class ConstantUtils {
 
     public abstract static class PopulationTools {
 
-        public static void populateExpression(@NonNull Expression expression) {
+        public static void populateExpression(@NotNull Expression expression) {
 
             for (String missingConstName : expression.getMissingUserDefinedArguments()) {
 
@@ -43,7 +43,8 @@ public abstract class ConstantUtils {
          * @return Status {@link Integer}.
          * @throws CommandException If the {@link Constant} could not be found.
          */
-        public static @NonNull Integer sendConstant(@NonNull CommandContext<ServerCommandSource> ctx, @NonNull Collection<Constant> constants) throws CommandException {
+        @SuppressWarnings("SameReturnValue")
+        public static @NotNull Integer sendConstant(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Collection<Constant> constants) throws CommandException {
 
             String name = StringArgumentType.getString(ctx, CommonLang.Argument.NAME);
 
@@ -60,7 +61,7 @@ public abstract class ConstantUtils {
 
     public static abstract class ClassTools {
 
-        static @NonNull Collection<@NonNull Constant> getConstantsFromClasses(@NonNull Class<?> @NotNull ... classes) {
+        static @NotNull Collection<@NotNull Constant> getConstantsFromClasses(@NotNull Class<?> @NotNull ... classes) {
             Collection<Constant> constants = new ArrayList<>(classes.length);
             for (Class<?> c : classes) {
                 for (Field f : c.getDeclaredFields()) {

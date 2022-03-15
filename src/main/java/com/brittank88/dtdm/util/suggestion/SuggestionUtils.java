@@ -13,7 +13,6 @@ import net.minecraft.client.gui.screen.CommandSuggestor;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.math.MathHelper;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -37,7 +36,7 @@ public abstract class SuggestionUtils {
      * @param narrateFirstSuggestion Whether to narrate the first suggestion.
      * @return The created {@link CommandSuggestor.SuggestionWindow SuggestionWindow} instance.
      */
-    public static CommandSuggestor.SuggestionWindow createSuggestionWindow(@NonNull ChatScreen chatScreen, @NonNull Suggestions suggestions, boolean narrateFirstSuggestion) {
+    public static CommandSuggestor.SuggestionWindow createSuggestionWindow(@NotNull ChatScreen chatScreen, @NotNull Suggestions suggestions, boolean narrateFirstSuggestion) {
 
         ChatScreenAccessors castChatScreen                     = (ChatScreenAccessors) chatScreen;
         CommandSuggestor commandSuggestor                      = castChatScreen.getCommandSuggestor();
@@ -120,7 +119,7 @@ public abstract class SuggestionUtils {
      * @param offset The {@link Integer offset} to use.
      * @return The created {@link Collection}<{@link String}> of suggestions.
      */
-    public static Collection<String> suggestionFromIntOffset(@NonNull String prefix, int start, int offset) {
+    public static Collection<String> suggestionFromIntOffset(@NotNull String prefix, int start, int offset) {
         return suggestFromIntRange(prefix, start, start + offset);
     }
 }

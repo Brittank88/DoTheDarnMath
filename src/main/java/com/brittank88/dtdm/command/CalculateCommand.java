@@ -8,13 +8,14 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
+
 
 public abstract class CalculateCommand {
 
-    public static @NonNull LiteralArgumentBuilder<ServerCommandSource> build() {
+    public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> calculateCommand = CommandManager.literal(I18n.translate("commands.dtdm.calculate.literal"))
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> calculateCommand = CommandManager.literal(I18n.translate("commands.dtdm.calculate.literal"))
                 .then(CommandManager.argument(CommonLang.Argument.EXPRESSION, StringArgumentType.string())
                         .executes(ExpressionUtils.CalculationTools::sendCalculation)
                         .then(CommandManager.argument(CommonLang.Argument.TARGET, EntityArgumentType.players())

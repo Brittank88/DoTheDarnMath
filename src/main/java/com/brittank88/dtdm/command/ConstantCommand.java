@@ -12,7 +12,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Constant;
 
 import java.util.Collection;
@@ -21,9 +22,9 @@ import java.util.stream.Collectors;
 
 public abstract class ConstantCommand {
 
-    public static @NonNull LiteralArgumentBuilder<ServerCommandSource> build() {
+    public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(CommonLang.Literal.GET);
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(CommonLang.Literal.GET);
         for (Map.Entry<ConstantCategory, Collection<Constant>> entry : ConstantCoordinator.CONSTANTS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(CommonLang.Argument.NAME, StringArgumentType.word())
@@ -35,7 +36,9 @@ public abstract class ConstantCommand {
             );
         }
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(CommonLang.Literal.ADD)
+        // TODO: Support expressions that evaluate to a double for the value argument.
+
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(CommonLang.Literal.ADD)
                 .then(CommandManager.argument(CommonLang.Argument.NAME, StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
                                 I18n.translate("commands.dtdm.constant.add.argument.name.suggest_prefix"),
@@ -49,7 +52,7 @@ public abstract class ConstantCommand {
                         )
                 );
 
-        @NonNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(CommonLang.Literal.REMOVE)
+        @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(CommonLang.Literal.REMOVE)
                 .then(CommandManager.argument(CommonLang.Argument.NAME, StringArgumentType.word())
                         .executes(ctx -> ConstantCoordinator.removeConstant(StringArgumentType.getString(ctx, CommonLang.Argument.NAME), ctx))
                 );

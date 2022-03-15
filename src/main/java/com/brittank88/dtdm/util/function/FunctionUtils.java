@@ -8,7 +8,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.Function;
@@ -23,7 +23,7 @@ public abstract class FunctionUtils {
 
     public abstract static class PopulationTools {
 
-        public static void populateExpression(@NonNull Expression expression) throws RuntimeException {
+        public static void populateExpression(@NotNull Expression expression) throws RuntimeException {
 
             for (String missingFuncName : expression.getMissingUserDefinedFunctions()) {
 
@@ -64,19 +64,19 @@ public abstract class FunctionUtils {
 
     public static abstract class StringTools {
 
-        public static @NonNull String getFunctionDisplayString(@NonNull Function function, boolean includeBody) {
+        public static @NotNull String getFunctionDisplayString(@NotNull Function function, boolean includeBody) {
             return function.getFunctionName() + getFunctionParameterSetString(function) + (includeBody ? '=' + function.getFunctionExpressionString() : "");
         }
 
-        public static @NonNull String getFunctionParameterSetString(@NonNull Function function) {
+        public static @NotNull String getFunctionParameterSetString(@NotNull Function function) {
             return "(" + formatParametersToString(getAllParameterStrings(function))  + ")";
         }
 
-        public static @NonNull Collection<String> getAllParameterStrings(@NonNull Function function) {
+        public static @NotNull Collection<String> getAllParameterStrings(@NotNull Function function) {
             return IntStream.range(0, function.getParametersNumber()).mapToObj(function::getParameterName).collect(Collectors.toList());
         }
 
-        public static @NonNull String formatParametersToString(@NotNull Collection<String> parameters) {
+        public static @NotNull String formatParametersToString(@NotNull Collection<String> parameters) {
             return parameters.stream().map(Object::toString).collect(Collectors.joining(", "));
         }
     }
@@ -91,7 +91,8 @@ public abstract class FunctionUtils {
          * @return Status {@link Integer}.
          * @throws CommandException If the {@link Function} could not be found.
          */
-        public static @NonNull Integer sendFunction(@NonNull CommandContext<ServerCommandSource> ctx, @NonNull Collection<Function> functions) throws CommandException {
+        @SuppressWarnings("SameReturnValue")
+        public static @NotNull Integer sendFunction(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Collection<Function> functions) throws CommandException {
 
             String name = StringArgumentType.getString(ctx, CommonLang.Argument.NAME);
 
@@ -120,7 +121,7 @@ public abstract class FunctionUtils {
          * @param classes {@link Class Classes} to get {@link Function Functions} from.
          * @return A {@link Collection<Function>} of {@link Function Functions}.
          */
-        static @NonNull Collection<@NonNull Function> getFunctionsFromClasses(@NonNull Class<?> @NotNull ... classes) {
+        static @NotNull Collection<@NotNull Function> getFunctionsFromClasses(@NotNull Class<?> @NotNull ... classes) {
             Collection<Function> functions = new ArrayList<>(classes.length);
             for (Class<?> c : classes) {
                 for (Method m : c.getDeclaredMethods()) {
