@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 @Environment(EnvType.CLIENT)
 public class DTDMClient implements ClientModInitializer {
 
+    // FIXME: Lang still broken...
+
     // TODO: Hack in complex numbers support???
     // TODO: Extra support for unicode math symbols?
 

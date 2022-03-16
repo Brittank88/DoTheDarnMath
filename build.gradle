@@ -1,7 +1,21 @@
 //file:noinspection HardCodedStringLiteral
+import proguard.gradle.ProGuardTask
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.guardsquare:proguard-gradle:7.2.1") {
+            exclude(group: "com.android.tools.build")
+        }
+    }
+}
+
 plugins {
     id("fabric-loom") version("0.11-SNAPSHOT")
     id("maven-publish")
+    id("com.github.johnrengelman.shadow") version("7.1.2")
 }
 
 version = project.mod_version
@@ -70,6 +84,27 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
+}
+
+task proguardJars(type: ProGuardTask, dependsOn: prepareRemapJar) {
+
+    // Task Configuration
+    outputs.upToDateWhen { false }
+
+    // Proguard rules.
+    keep("class ** { *; }")
+    libraryjars("${System.getenv("JAVA_HOME")}/jmods/java.base.jmod(!**.jar;!module-info.class)")
+
+    // I/O configuration.
+    remapJar.nestedJars.forEach {
+        injars(it)
+        outjars("${buildDir}/tmp/proguard/${it.getName()}")
+    }
+}
+
+remapJar {
+    dependsOn(proguardJars)
+    nestedJars.setFrom(proguardJars.outJarFiles as List<File>)
 }
 
 // configure the maven publication
