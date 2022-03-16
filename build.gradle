@@ -1,4 +1,6 @@
 //file:noinspection HardCodedStringLiteral
+
+import java.nio.file.Path
 import proguard.gradle.ProGuardTask
 
 buildscript {
@@ -13,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id("fabric-loom") version("0.11-SNAPSHOT")
+    id("fabric-loom").version("0.11-SNAPSHOT")
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version("7.1.2")
 }
@@ -42,7 +44,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     // https://mvnrepository.com/artifact/org.mariuszgromada.math/MathParser.org-mXparser
-    include(implementation("org.mariuszgromada.math:MathParser.org-mXparser:${project.mXparser_version}"))
+    shadow(implementation("org.mariuszgromada.math:MathParser.org-mXparser:${project.mXparser_version}"))
 }
 
 processResources {
@@ -86,25 +88,53 @@ jar {
     }
 }
 
-task proguardJars(type: ProGuardTask, dependsOn: prepareRemapJar) {
+shadowJar {
+    archiveClassifier.set("shadowed")
+    configurations = [project.configurations.shadow]
+    relocate("org.mariuszgromada", "shadow.org.mariuszgromada")
+}
 
-    // Task Configuration
-    outputs.upToDateWhen { false }
+task proguard(type: ProGuardTask, dependsOn: shadowJar) {
 
-    // Proguard rules.
-    keep("class ** { *; }")
-    libraryjars("${System.getenv("JAVA_HOME")}/jmods/java.base.jmod(!**.jar;!module-info.class)")
+    // NOTE: The "code/allocation/variable" optimisation (see: https://www.guardsquare.com/manual/configuration/optimizations) breaks remapJar.
+    configuration("proguard-rules.pro")
 
-    // I/O configuration.
-    remapJar.nestedJars.forEach {
-        injars(it)
-        outjars("${buildDir}/tmp/proguard/${it.getName()}")
-    }
+    File shadowedJar = shadowJar.archiveFile.get().asFile
+    String projectDir = project.getProjectDir().getPath().replace('\\', '/')
+    String gradleUserHomeDir = project.getGradle().getGradleUserHomeDir().getPath().replace('\\', '/')
+
+    injars(shadowedJar)
+    libraryjars(
+            new HashMap(2) {{
+                put("filter", "!module-info.class")
+                put("jarfilter", "!**.jar")
+            }},
+            fileTree("${System.getenv("JAVA_HOME")}/jmods").matching { include("java.base.jmod") }.getSingleFile()
+    )
+    libraryjars(fileTree("${projectDir}/.gradle/loom-cache/${project.minecraft_version}")
+            .matching { include("**/*.jar") }.files.stream()
+            .filter(f -> !f.getName().endsWith("sources.jar"))
+            .map(f -> f.toPath())
+            .toList())
+    libraryjars(fileTree("${projectDir}/.gradle/loom-cache/remapped_mods")
+            .matching { include("**/*.jar") }.files.stream()
+            .filter(f -> !f.getName().endsWith("sources.jar"))
+            .map(f -> f.toPath())
+            .toList())
+    libraryjars(fileTree("${gradleUserHomeDir}/caches/modules-2/files-2.1")
+            .matching { include("**/*.jar") }.files.stream()
+            .map(f -> f.toPath())
+            .toList())
+    outjars("${buildDir}/tmp/${shadowedJar.getName()}")
+
+}
+
+prepareRemapJar {
+    dependsOn(proguard)
 }
 
 remapJar {
-    dependsOn(proguardJars)
-    nestedJars.setFrom(proguardJars.outJarFiles as List<File>)
+    inputFile.set(proguard.outJarFileCollection.singleFile)
 }
 
 // configure the maven publication
