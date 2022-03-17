@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screen.CommandSuggestor;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.ActionResult;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +19,8 @@ import java.util.List;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class CommandSuggestorWrapper {
+
+    // TODO: Implement "ghost text" for currently selected suggestion (including suggestions with text following them).
 
     //#// Fields //#//
 

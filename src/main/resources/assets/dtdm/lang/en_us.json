@@ -1,13 +1,4 @@
 {
-  "mod.displayName": "DTDM",
-
-  "logger.info.initialisation.common_lang.literal": "(CommonLang) Literals initialised!",
-  "logger.info.initialisation.common_lang.argument": "(CommonLang) Arguments initialised!",
-  "logger.info.initialisation.common_lang_registry": "(CommonLang) Initialisation complete!",
-  "logger.info.initialisation.command_registry": "(CommandRegistry) Registration complete!",
-  "logger.info.initialisation.suggestion_supplier_registry": "(SuggestionSupplierRegistry) Registration complete!",
-  "logger.info.initialisation.finalised": "(DTDMClient) Initialisation complete!",
-
   "message.error.name.generic.empty": "Name cannot be empty",
   "message.error.name.generic.spaces": "Name cannot contain spaces",
   "message.error.name.generic.nonexistent": "Nonexistent: %1$s",

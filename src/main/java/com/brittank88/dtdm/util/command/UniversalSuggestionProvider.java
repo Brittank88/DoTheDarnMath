@@ -6,7 +6,6 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

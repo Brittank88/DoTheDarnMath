@@ -8,13 +8,13 @@ import com.brittank88.dtdm.util.suggestion.SuggestionSupplier;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.ActionResult;
 
 import java.util.Collections;
 
+@SuppressWarnings("HardCodedStringLiteral")
 public abstract class SuggestionSupplierRegistry {
 
     public static void register() {
@@ -90,6 +90,6 @@ public abstract class SuggestionSupplierRegistry {
             return ActionResult.PASS;
         });
 
-        DTDMClient.LOGGER.info(I18n.translate("logger.info.initialisation.suggestion_supplier_registry"));
+        DTDMClient.LOGGER.info("(SuggestionSupplierRegistry) Registration complete!");
     }
 }

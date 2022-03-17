@@ -1,6 +1,5 @@
 package com.brittank88.dtdm.util.function;
 
-import com.brittank88.dtdm.util.lang.CommonLang;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
@@ -8,7 +7,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
-
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.Function;
@@ -94,7 +92,7 @@ public abstract class FunctionUtils {
         @SuppressWarnings("SameReturnValue")
         public static @NotNull Integer sendFunction(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Collection<Function> functions) throws CommandException {
 
-            String name = StringArgumentType.getString(ctx, CommonLang.Argument.NAME);
+            String name = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"));
 
             Function function = functions.stream()
                     .filter(f -> f.getFunctionName().equals(name))

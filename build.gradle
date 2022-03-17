@@ -101,6 +101,7 @@ task proguardJar(type: proguard.gradle.ProGuardTask, dependsOn: shadowJar) {
     Map<String, String> MODULE_INFO_CLASS_FILTER = new HashMap<String, String>(1) {{ put("filter", "!module-info.class") }}
 
     // NOTE: The "code/allocation/variable" optimisation (see: https://www.guardsquare.com/manual/configuration/optimizations) breaks remapJar.
+    // Note: All annotations must be kept, or @Mixin and similar are lost.
     configuration("proguard-rules.pro")
 
     libraryjars(

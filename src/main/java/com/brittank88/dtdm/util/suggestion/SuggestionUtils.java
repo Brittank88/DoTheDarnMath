@@ -15,7 +15,9 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

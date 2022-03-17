@@ -2,7 +2,6 @@ package com.brittank88.dtdm.util.expression;
 
 import com.brittank88.dtdm.util.constant.ConstantUtils;
 import com.brittank88.dtdm.util.function.FunctionUtils;
-import com.brittank88.dtdm.util.lang.CommonLang;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -12,7 +11,6 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 
@@ -68,13 +66,13 @@ public abstract class ExpressionUtils {
         public static int sendCalculation(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
 
             // Send feedback to the player.
-            String expression = StringArgumentType.getString(ctx, CommonLang.Argument.EXPRESSION);
+            String expression = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.expression"));
             ctx.getSource().sendFeedback(Text.of(expression + " = " + calculateExpression(expression)), false);
 
             // Broadcast to players in the selector (excluding the player who issued the command).
             ServerPlayerEntity playerEntity = ctx.getSource().getPlayer();
             try {
-                EntityArgumentType.getPlayers(ctx, CommonLang.Argument.TARGET)
+                EntityArgumentType.getPlayers(ctx, I18n.translate("commands.generic.argument.target"))
                         .stream().filter(target -> !target.equals(playerEntity))
                         .forEach(player -> player.sendMessage(Text.of(I18n.translate(
                                 "commands.generic.calculate.broadcast",

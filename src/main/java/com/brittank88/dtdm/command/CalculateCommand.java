@@ -1,7 +1,6 @@
 package com.brittank88.dtdm.command;
 
 import com.brittank88.dtdm.util.expression.ExpressionUtils;
-import com.brittank88.dtdm.util.lang.CommonLang;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.client.resource.language.I18n;
@@ -16,9 +15,9 @@ public abstract class CalculateCommand {
     public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
         @NotNull LiteralArgumentBuilder<ServerCommandSource> calculateCommand = CommandManager.literal(I18n.translate("commands.dtdm.calculate.literal"))
-                .then(CommandManager.argument(CommonLang.Argument.EXPRESSION, StringArgumentType.string())
+                .then(CommandManager.argument(I18n.translate("commands.generic.argument.expression"), StringArgumentType.string())
                         .executes(ExpressionUtils.CalculationTools::sendCalculation)
-                        .then(CommandManager.argument(CommonLang.Argument.TARGET, EntityArgumentType.players())
+                        .then(CommandManager.argument(I18n.translate("commands.generic.argument.target"), EntityArgumentType.players())
                                 .executes(ExpressionUtils.CalculationTools::sendCalculation)
                         )
                 );

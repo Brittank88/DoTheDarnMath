@@ -1,13 +1,11 @@
 package com.brittank88.dtdm.util.constant;
 
-import com.brittank88.dtdm.util.lang.CommonLang;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Expression;
@@ -46,7 +44,7 @@ public abstract class ConstantUtils {
         @SuppressWarnings("SameReturnValue")
         public static @NotNull Integer sendConstant(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Collection<Constant> constants) throws CommandException {
 
-            String name = StringArgumentType.getString(ctx, CommonLang.Argument.NAME);
+            String name = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"));
 
             Double value = constants.stream()
                     .filter(c -> c.getConstantName().equals(name))

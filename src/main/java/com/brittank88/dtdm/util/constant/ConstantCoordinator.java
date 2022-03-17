@@ -7,7 +7,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.mathcollection.AstronomicalConstants;
