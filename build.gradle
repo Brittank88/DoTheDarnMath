@@ -20,6 +20,8 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
+boolean IS_RELEASE = System.getenv("BUILD_MODE") == "release"
+
 repositories {
     mavenCentral()
 
@@ -94,6 +96,8 @@ shadowJar {
 //noinspection UnnecessaryQualifiedReference
 task proguardJar(type: proguard.gradle.ProGuardTask, dependsOn: shadowJar) {
 
+    onlyIf { IS_RELEASE }
+
     Map<String, String> MODULE_INFO_CLASS_FILTER = new HashMap<String, String>(1) {{ put("filter", "!module-info.class") }}
 
     // NOTE: The "code/allocation/variable" optimisation (see: https://www.guardsquare.com/manual/configuration/optimizations) breaks remapJar.
@@ -118,7 +122,8 @@ prepareRemapJar {
 }
 
 remapJar {
-    inputFile.set(proguardJar.outJarFileCollection.singleFile)
+    if (IS_RELEASE) inputFile.set(proguardJar.outJarFileCollection.singleFile)
+    else inputFile.set(shadowJar.archiveFile.get().asFile)
 }
 
 // configure the maven publication
