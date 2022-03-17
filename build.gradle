@@ -1,8 +1,5 @@
 //file:noinspection HardCodedStringLiteral
 
-import java.nio.file.Path
-import proguard.gradle.ProGuardTask
-
 buildscript {
     repositories {
         mavenCentral()
@@ -94,47 +91,34 @@ shadowJar {
     relocate("org.mariuszgromada", "shadow.org.mariuszgromada")
 }
 
-task proguard(type: ProGuardTask, dependsOn: shadowJar) {
+//noinspection UnnecessaryQualifiedReference
+task proguardJar(type: proguard.gradle.ProGuardTask, dependsOn: shadowJar) {
+
+    Map<String, String> MODULE_INFO_CLASS_FILTER = new HashMap<String, String>(1) {{ put("filter", "!module-info.class") }}
 
     // NOTE: The "code/allocation/variable" optimisation (see: https://www.guardsquare.com/manual/configuration/optimizations) breaks remapJar.
     configuration("proguard-rules.pro")
 
-    File shadowedJar = shadowJar.archiveFile.get().asFile
-    String projectDir = project.getProjectDir().getPath().replace('\\', '/')
-    String gradleUserHomeDir = project.getGradle().getGradleUserHomeDir().getPath().replace('\\', '/')
-
-    injars(shadowedJar)
     libraryjars(
-            new HashMap(2) {{
-                put("filter", "!module-info.class")
+            new HashMap<String, String>(2) {{
+                putAll(MODULE_INFO_CLASS_FILTER)
                 put("jarfilter", "!**.jar")
             }},
             fileTree("${System.getenv("JAVA_HOME")}/jmods").matching { include("java.base.jmod") }.getSingleFile()
     )
-    libraryjars(fileTree("${projectDir}/.gradle/loom-cache/${project.minecraft_version}")
-            .matching { include("**/*.jar") }.files.stream()
-            .filter(f -> !f.getName().endsWith("sources.jar"))
-            .map(f -> f.toPath())
-            .toList())
-    libraryjars(fileTree("${projectDir}/.gradle/loom-cache/remapped_mods")
-            .matching { include("**/*.jar") }.files.stream()
-            .filter(f -> !f.getName().endsWith("sources.jar"))
-            .map(f -> f.toPath())
-            .toList())
-    libraryjars(fileTree("${gradleUserHomeDir}/caches/modules-2/files-2.1")
-            .matching { include("**/*.jar") }.files.stream()
-            .map(f -> f.toPath())
-            .toList())
-    outjars("${buildDir}/tmp/${shadowedJar.getName()}")
+    libraryjars(MODULE_INFO_CLASS_FILTER, project.configurations.runtimeClasspath )
 
+    File shadowedJar = shadowJar.archiveFile.get().asFile
+    injars(shadowedJar)
+    outjars("${buildDir}/tmp/${shadowedJar.getName()}")
 }
 
 prepareRemapJar {
-    dependsOn(proguard)
+    dependsOn(proguardJar)
 }
 
 remapJar {
-    inputFile.set(proguard.outJarFileCollection.singleFile)
+    inputFile.set(proguardJar.outJarFileCollection.singleFile)
 }
 
 // configure the maven publication
