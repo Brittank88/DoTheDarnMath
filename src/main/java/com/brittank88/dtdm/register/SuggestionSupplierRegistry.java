@@ -11,11 +11,11 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.ActionResult;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.Collections;
 
-@SuppressWarnings("HardCodedStringLiteral")
-public abstract class SuggestionSupplierRegistry {
+public @NonNls abstract class SuggestionSupplierRegistry {
 
     public static void register() {
 

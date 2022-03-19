@@ -12,8 +12,7 @@ public class DTDMClient implements ClientModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger("DTDM");
 
-    @Override
-    public void onInitializeClient() {
+    @Override public void onInitializeClient() {
         CommandRegistrar.register();
         LOGGER.info("DTDM client has been initialized!");
     }

@@ -8,18 +8,20 @@
   "message.error.function.override": "Cannot override default function: %1$s",
   "message.error.function.remove_default": "Cannot remove default constant: %1$s",
   "message.error.function.invalid_parameters": "Invalid function parameters",
+  "message.error.function.syntax": "Invalid function syntax - did you define all parameters?",
   "message.error.expression.population": "Failed to populate expression:\n%1$s",
   "message.error.expression.calculation": "Failed to calculate expression:\n%1$s",
   "message.error.expression.syntax": "Syntax error in expression:\n%1$s",
   "message.error.expression.parse": "Failed to parse expression:\n%1$s",
+  "message.error.boolean.truthTable.row_not_found": "No row found for truth table %1$s: %2$i",
 
-  "message.warning.constant.override": "Overwrote Constant %1$s: %2$f -> %3$f",
-  "message.warning.function.override": "Overwrote Function %1$s: %2$s -> %3$s",
+  "message.warning.constant.override": "Overwrote constant %1$s: %2$f -> %3$f",
+  "message.warning.function.override": "Overwrote function %1$s: %2$s -> %3$s",
 
-  "message.info.constant.add": "Added Constant %1$s: %2$f",
-  "message.info.constant.remove": "Removed Constant %1$s",
-  "message.info.function.add": "Added Function %1$s",
-  "message.info.function.remove": "Removed Function %1$s",
+  "message.info.constant.add": "Added constant %1$s: %2$f",
+  "message.info.constant.remove": "Removed constant %1$s",
+  "message.info.function.add": "Added function %1$s",
+  "message.info.function.remove": "Removed function %1$s",
   "message.info.function.compute_time": "[Computes in %1$s sec]",
 
   "commands.generic.argument.target": "target",
@@ -38,5 +40,14 @@
   "commands.dtdm.constant.add.argument.name.suggest_prefix": "C",
 
   "commands.dtdm.function.literal": "function",
-  "commands.dtdm.function.add.argument.name.suggest_prefix": "f"
+  "commands.dtdm.function.add.argument.name.suggest_prefix": "f",
+
+  "commands.dtdm.boolean.literal": "boolean",
+  "commands.dtdm.boolean.truthTable": "truthtable",
+  "commands.dtdm.boolean.literal.f.short": "F",
+  "commands.dtdm.boolean.literal.t.short": "T",
+  "commands.dtdm.boolean.literal.n.short": "N",
+  "commands.dtdm.boolean.literal.f.long": "FALSE",
+  "commands.dtdm.boolean.literal.t.long": "TRUE",
+  "commands.dtdm.boolean.literal.n.long": "NAN"
 }

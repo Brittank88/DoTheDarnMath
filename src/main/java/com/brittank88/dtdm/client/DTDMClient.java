@@ -7,13 +7,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NonNls;
 
-@SuppressWarnings("HardCodedStringLiteral")
 @Environment(EnvType.CLIENT)
-public class DTDMClient implements ClientModInitializer {
+public @NonNls class DTDMClient implements ClientModInitializer {
 
     // TODO: Hack in complex numbers support???
     // TODO: Extra support for unicode math symbols?
+    // TODO: Make all possible function parameters final.
 
     public static final String MOD_ID = "dtdm";
     public static final Logger LOGGER = LogManager.getLogger("DTDM");

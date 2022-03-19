@@ -26,7 +26,7 @@ public abstract class ConstantCommand {
         for (Map.Entry<ConstantCategory, Collection<Constant>> entry : ConstantCoordinator.CONSTANTS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
-                            .suggests(new UniversalSuggestionProvider<>(ignored -> entry.getValue().stream()
+                            .suggests(new UniversalSuggestionProvider<>(() -> entry.getValue().stream()
                                     .map(Constant::getConstantName)
                                     .collect(Collectors.toList())
                             )).executes(ctx -> ConstantUtils.CommandTools.sendConstant(ctx, entry.getValue()))
@@ -38,9 +38,8 @@ public abstract class ConstantCommand {
 
         @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(I18n.translate("commands.generic.literal.add"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
-                        .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
-                                I18n.translate("commands.dtdm.constant.add.argument.name.suggest_prefix"),
-                                ConstantCoordinator.getUserConstants().size(), 3
+                        .suggests(new UniversalSuggestionProvider<>(() -> SuggestionUtils.suggestionFromIntOffset(
+                                "C", ConstantCoordinator.getUserConstants().size(), 3 // NON-NLS
                         ))).then(CommandManager.argument(I18n.translate("commands.generic.argument.value"), DoubleArgumentType.doubleArg())
                                 .executes(ctx -> ConstantCoordinator.addConstant(
                                         StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name")),

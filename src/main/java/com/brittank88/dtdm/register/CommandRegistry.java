@@ -6,9 +6,11 @@ import com.brittank88.dtdm.util.command.argument_type.FunctionParametersArgument
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import org.jetbrains.annotations.NonNls;
 
-@SuppressWarnings("HardCodedStringLiteral")
-public abstract class CommandRegistry {
+public @NonNls abstract class CommandRegistry {
+
+    // TODO: If any command registration fails, fail softly (I.e., allow the world to still load).
 
     public static void register() {
         ArgumentTypes.register(

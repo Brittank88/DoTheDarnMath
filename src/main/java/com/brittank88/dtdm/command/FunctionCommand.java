@@ -28,7 +28,7 @@ public abstract class FunctionCommand {
         for (Map.Entry<FunctionCategory, Collection<Function>> entry : FunctionCoordinator.FUNCTIONS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
-                            .suggests(new UniversalSuggestionProvider<>(ignored -> entry.getValue().stream()
+                            .suggests(new UniversalSuggestionProvider<>(() -> entry.getValue().stream()
                                     .map(Function::getFunctionName)
                                     .collect(Collectors.toList())
                             )).executes(ctx -> FunctionUtils.CommandTools.sendFunction(ctx, entry.getValue()))
@@ -39,7 +39,7 @@ public abstract class FunctionCommand {
         @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(I18n.translate("commands.generic.literal.add"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
-                                I18n.translate("commands.dtdm.function.add.argument.name.suggest_prefix"), FunctionCoordinator.getUserFunctions().size(), 3)
+                                "f", FunctionCoordinator.getUserFunctions().size(), 3)   // NON-NLS
                         )).then(CommandManager.argument(I18n.translate("commands.generic.argument.parameters"), FunctionParametersArgumentType.functionParameters())
                                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.expression"), StringArgumentType.greedyString())
                                         .executes(ctx -> FunctionCoordinator.addFunction(

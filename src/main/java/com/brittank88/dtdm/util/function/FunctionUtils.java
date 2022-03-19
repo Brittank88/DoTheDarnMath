@@ -119,7 +119,7 @@ public abstract class FunctionUtils {
          * @param classes {@link Class Classes} to get {@link Function Functions} from.
          * @return A {@link Collection<Function>} of {@link Function Functions}.
          */
-        static @NotNull Collection<@NotNull Function> getFunctionsFromClasses(@NotNull Class<?> @NotNull ... classes) {
+        static @NotNull Collection<@NotNull Function> getFunctionsFromClasses(@NotNull final Class<?> @NotNull ... classes) {
             Collection<Function> functions = new ArrayList<>(classes.length);
             for (Class<?> c : classes) {
                 for (Method m : c.getDeclaredMethods()) {

@@ -29,23 +29,19 @@ class FunctionExtensionMethodWrapper implements FunctionExtension, Cloneable {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public int getParametersNumber() {
+    @Override public int getParametersNumber() {
         return parameters.size();
     }
 
-    @Override
-    public void setParameterValue(int parameterIndex, double parameterValue) {
+    @Override public void setParameterValue(int parameterIndex, double parameterValue) {
         parameters.get(parameterIndex).setValue(OptionalDouble.of(parameterValue));
     }
 
-    @Override
-    public @NotNull String getParameterName(int parameterIndex) {
+    @Override public @NotNull String getParameterName(int parameterIndex) {
         return parameters.get(parameterIndex).getKey();
     }
 
-    @Override
-    public double calculate() throws RuntimeException {
+    @Override public double calculate() throws RuntimeException {
         if (parameters.stream().anyMatch(p -> p.getValue().isEmpty())) throw new RuntimeException("Missing parameter value.");
         try {
             return (double) method.invoke(null, (Object) parameters.stream().map(AbstractMap.SimpleEntry::getValue).toArray(OptionalDouble[]::new));
@@ -54,8 +50,7 @@ class FunctionExtensionMethodWrapper implements FunctionExtension, Cloneable {
         }
     }
 
-    @Override
-    public @NotNull FunctionExtension clone() throws RuntimeException {
+    @Override public @NotNull FunctionExtension clone() throws RuntimeException {
         try {
             return (FunctionExtensionMethodWrapper) super.clone();
         } catch (CloneNotSupportedException e) {

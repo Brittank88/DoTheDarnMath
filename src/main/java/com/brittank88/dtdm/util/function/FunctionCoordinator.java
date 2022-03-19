@@ -74,7 +74,7 @@ public abstract class FunctionCoordinator {
     @SuppressWarnings("SameReturnValue")
     public static @NotNull Integer addFunction(
             @NotNull String name,
-            @NotNull Character @NotNull [] parameters,
+            @NotNull String @NotNull [] parameters,
             @NotNull String expression,
             CommandContext<ServerCommandSource> ctx
     ) throws CommandException {
@@ -115,8 +115,13 @@ public abstract class FunctionCoordinator {
         ConstantCoordinator.getUserConstants().stream().filter(c -> newFunction.getConstant(c.getConstantName()) == null).forEach(newFunction::addConstants);
         FunctionCoordinator.getUserFunctions().stream().filter(f -> newFunction.getFunction(f.getFunctionName()) == null).forEach(newFunction::addFunctions);
 
+        // If there are still any un-defined variables, throw an error.
+        if (newFunction.checkSyntax() == Function.SYNTAX_ERROR_OR_STATUS_UNKNOWN) throw new CommandException(Text.of(I18n.translate("message.error.function.syntax")));
+
+        // Add the function to the list of user functions.
         getUserFunctions().add(newFunction);
 
+        // Send feedback to the command invoker.
         ctx.getSource().sendFeedback(Text.of(message), false);
 
         // Return success.
@@ -137,10 +142,13 @@ public abstract class FunctionCoordinator {
         if (name.contains(" ")) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.spaces")));
         if (getAllDefaultFunctions().stream().anyMatch(f -> f.getFunctionName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.function.remove_default", name)));
 
+        // Remove the function from the list of user functions, by name.
         getUserFunctions().removeIf(f -> f.getFunctionName().equals(name));
 
+        // Send feedback to the command invoker.
         ctx.getSource().sendFeedback(Text.of(I18n.translate("message.info.function.remove", name)), false);
 
+        // Return success.
         return 1;
     }
 

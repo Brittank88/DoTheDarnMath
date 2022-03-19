@@ -9,6 +9,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,64 +17,106 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-// TODO: Support multi-char parameter names.
-
 /**
  * An argument type for function parameters.
  *
  * @see ArgumentType
  * @author Brittank88
  */
-public class FunctionParametersArgumentType implements ArgumentType<Character[]> {
+public class FunctionParametersArgumentType implements ArgumentType<String[]> {
 
+    /** Braces that we expect provided function parameters to be surrounded by. **/
     private static final Pair<Character, Character> BRACES = new Pair<>('(', ')');
+
+    /**
+     * Surrounds a supplied string with braces provided by {@link FunctionParametersArgumentType#BRACES} and returns the result.
+     *
+     * @param str The string to surround.
+     * @return The string surrounded by braces.
+     */
     private static @NotNull String appendBraces(String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
 
+    /** A list of examples of valid parameter inputs. **/
+    private @NonNls static final List<String> EXAMPLES = Stream.of(
+            "x", "x,y,z", "x, y, z",
+            "p1", "p1,p2,p3", "p1, p2, p3",
+            "var_1", "var_1,var_2,var_3", "var_1, var_2, var_3"
+    ).map(FunctionParametersArgumentType::appendBraces).toList();
+
+    /** The {@link CommandSyntaxException} thrown when the argument parsing fails. **/
     private static final SimpleCommandExceptionType INVALID_PARAM_EXCEPTION = new SimpleCommandExceptionType(Text.of(I18n.translate("message.error.function.invalid_parameters")));
 
+    /**
+     * Returns a new instance of {@link FunctionParametersArgumentType this class}.
+     *
+     * @return A new instance of {@link FunctionParametersArgumentType this class}.
+     */
     public static @NotNull FunctionParametersArgumentType functionParameters() { return new FunctionParametersArgumentType(); }
 
-    public static Character[] getFunctionParameters(CommandContext<ServerCommandSource> ctx, String name) { return ctx.getArgument(name, Character[].class); }
+    /**
+     * Uses the provided {@link CommandContext<ServerCommandSource>} to parse the argument defined by the supplied {@link String name},
+     * and return the {@link ArrayList<String> results}.
+     *
+     * @param ctx The {@link CommandContext<ServerCommandSource>} to use to parse the argument.
+     * @param name The name of the argument to parse.
+     * @return The {@link ArrayList<String> results} of the argument parsing.
+     */
+    public static @NotNull String @NotNull [] getFunctionParameters(CommandContext<ServerCommandSource> ctx, String name) { return ctx.getArgument(name, String[].class); }
 
-    @Override
-    public @NotNull Character[] parse(@NotNull StringReader reader) throws CommandSyntaxException {
+    /**
+     * Uses the supplied {@link StringReader} defined on the argument {@link String} to produce a list of function parameters, if possible.
+     *
+     * @param reader The {@link StringReader} to use, defined on the argument {@link String}.
+     * @return A {@link List<String>} of {@link String function parameters}.
+     * @throws CommandSyntaxException If the parse failed.
+     */
+    @Override public @NotNull String @NotNull [] parse(@NotNull StringReader reader) throws CommandSyntaxException {
 
+        // Ensure we can read forward, and that the opening brace is present.
         if (!reader.canRead() || reader.read() != BRACES.getLeft()) throw INVALID_PARAM_EXCEPTION.create();
-        else {
-            // This list holds the function parameters.
-            List<Character> chars = new ArrayList<>();
 
-            // We note the position of the cursor now that we have read the opening curly brace.
-            int start = reader.getCursor();
+        // Read the parameters.
+        List<String> params = new ArrayList<>();
+        StringBuilder currentParam = new StringBuilder();
+        while (reader.canRead() && reader.peek() != BRACES.getRight()) {
 
-            // We must then be able to locate a closing curly brace to match the opening one.
-            // If the closing curly brace is directly after the opening one, just return an empty array.
-            try { if (reader.readStringUntil(BRACES.getRight()).isEmpty()) return new Character[0]; }
-            catch (CommandSyntaxException e) { throw INVALID_PARAM_EXCEPTION.create(); }
+            // Read the next character.
+            char c = reader.read();
 
-            // We rewind back to the beginning of the substring contained within the curly braces.
-            reader.setCursor(start);
+            // If we reach a separator, add the current parameter to the list and start a new one.
+            if (c == ',') {
+                // Prevents empty parameters or consecutive separators.
+                if (currentParam.isEmpty()) throw INVALID_PARAM_EXCEPTION.create();
 
-            // We then read each character of this substring.
-            while (reader.canRead() && reader.peek() != ' ') {
+                // Add the current parameter to the list.
+                params.add(currentParam.toString());
 
-                // Read the character.
-                char cRead = reader.read();
+                // Clear the StringBuilder.
+                currentParam = new StringBuilder();
 
-                // We check the current character to see if it is a comma or the closing curly brace, and if it is, we skip it.
-                if (cRead == ',' || cRead == BRACES.getRight()) continue;
-
-                // Ensure it is a new alphabetic character.
-                if (chars.contains(cRead) || !Character.isAlphabetic(cRead)) throw INVALID_PARAM_EXCEPTION.create();
-
-                // We then add the character to our list of characters.
-                chars.add(cRead);
+                // If there is are spaces after the comma, skip them.
+                while (reader.canRead() && reader.peek() == ' ') reader.skip();
             }
-
-            return chars.toArray(new Character[0]);
+            // Otherwise, append the character to the current parameter if it is a letter, digit, or underscore.
+            else if (Character.isLetterOrDigit(c) || c == '_') currentParam.append(c);
+            // Skip any space characters.
+            else if (Character.isSpaceChar(c)) reader.skip();
+            // Otherwise, throw an exception.
+            else throw INVALID_PARAM_EXCEPTION.create();
         }
+
+        // Ensure we can read forward, and that the closing brace is present.
+        // This is still required as the while loop may have existed as a result of reader#canRead() returning false.
+        if (!reader.canRead() || reader.read() != BRACES.getRight()) throw INVALID_PARAM_EXCEPTION.create();
+
+        // Return the parameters.
+        return params.toArray(String[]::new);
     }
 
-    @Override
-    public Collection<String> getExamples() { return Stream.of("x,y,z", "x").map(FunctionParametersArgumentType::appendBraces).toList(); } //NON-NLS
+    /**
+     * Provides examples of {@link String valid parameter inputs}.
+     *
+     * @return A {@link Collection<String>} of examples of {@link String valid parameter inputs}.
+     */
+    @Override public Collection<String> getExamples() { return EXAMPLES; }
 }
