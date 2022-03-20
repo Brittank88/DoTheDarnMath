@@ -34,7 +34,7 @@ public abstract class ConstantCommand {
             );
         }
 
-        // TODO: Support expressions that evaluate to a double for the value argument.
+        // TODO: Support expressions that evaluate to a double as the value argument.
 
         @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(I18n.translate("commands.generic.literal.add"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class DTDMCommand {
 
     // TODO: mXparser.consolePrintHelp() support.
-    // TODO: Support for org.mariuszgromada.math.mxparser.mathcollection.SpecialValuesTrigonometric.
+    // TODO: Support for org.mariuszgromada.math.mxparser.mathcollection.SpecialValueTrigonometric.
 
     public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
         return CommandManager.literal("dtdm") //NON-NLS

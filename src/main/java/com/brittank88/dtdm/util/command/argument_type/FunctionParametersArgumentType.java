@@ -38,9 +38,15 @@ public class FunctionParametersArgumentType implements ArgumentType<String[]> {
 
     /** A list of examples of valid parameter inputs. **/
     private @NonNls static final List<String> EXAMPLES = Stream.of(
-            "x", "x,y,z", "x, y, z",
-            "p1", "p1,p2,p3", "p1, p2, p3",
-            "var_1", "var_1,var_2,var_3", "var_1, var_2, var_3"
+            "x",                                        // Single single-letter parameter.
+            "x,y,z", "x, y, z",                         // Multiple single-letter parameters separated by commas.
+            "x;y;z", "x; y; z",                         // Multiple single-letter parameters separated by semicolons.
+            "p1",                                       // Single multi-char (alphanumeric) parameter.
+            "p1,p2,p3", "p1, p2, p3",                   // Multiple multi-char (alphanumeric) parameters separated by commas.
+            "p1;p2;p3", "p1; p2; p3",                   // Multiple multi-char (alphanumeric) parameters separated by semicolons.
+            "var_1",                                    // Single multi-char (alphanumeric) parameter with underscore.
+            "var_1,var_2,var_3", "var_1, var_2, var_3", // Multiple multi-char (alphanumeric) parameters with underscores separated by commas.
+            "var_1;var_2;var_3", "var_1; var_2; var_3"  // Multiple multi-char (alphanumeric) parameters with underscores separated by semicolons.
     ).map(FunctionParametersArgumentType::appendBraces).toList();
 
     /** The {@link CommandSyntaxException} thrown when the argument parsing fails. **/
@@ -84,7 +90,7 @@ public class FunctionParametersArgumentType implements ArgumentType<String[]> {
             char c = reader.read();
 
             // If we reach a separator, add the current parameter to the list and start a new one.
-            if (c == ',') {
+            if (c == ',' || c == ';') {
                 // Prevents empty parameters or consecutive separators.
                 if (currentParam.isEmpty()) throw INVALID_PARAM_EXCEPTION.create();
 

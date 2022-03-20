@@ -12,8 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class BooleanCommand {
 
-    // TODO: Add support for viewing truth tables in org.mariuszgromada.math.mxparser.mathcollection.BooleanAlgebra.
-
     public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
         ImmutableMap<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> truthTables = BooleanUtils.TruthTable.ClassTools.getTruthTables();
