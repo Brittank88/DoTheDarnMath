@@ -24,7 +24,10 @@ public abstract class FunctionCommand {
 
         // TODO: Support optional function description.
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(I18n.translate("commands.generic.literal.get"));
+        // TODO: Prevent hanging on large recursive calculations.
+
+        /* Command for getting the definition, body and metadata of a default or user-defined function. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(I18n.translate("commands.generic.literal.get"));
         for (Map.Entry<FunctionCategory, Collection<Function>> entry : FunctionCoordinator.FUNCTIONS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
@@ -36,7 +39,8 @@ public abstract class FunctionCommand {
             );
         }
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(I18n.translate("commands.generic.literal.add"))
+        /* Command for defining a new user-defined function. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(I18n.translate("commands.generic.literal.add"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(ignored -> SuggestionUtils.suggestionFromIntOffset(
                                 "f", FunctionCoordinator.getUserFunctions().size(), 3)   // NON-NLS
@@ -52,14 +56,18 @@ public abstract class FunctionCommand {
                         )
                 );
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(I18n.translate("commands.generic.literal.remove"))
+        /* Command for removing a user-defined function. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(I18n.translate("commands.generic.literal.remove"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
                         .executes(ctx -> FunctionCoordinator.removeFunction(StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name")), ctx))
                 );
 
-        return CommandManager.literal(I18n.translate("commands.dtdm.function.literal"))
+        /* Root for all function-related commands. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> functionCommandRoot = CommandManager.literal(I18n.translate("commands.dtdm.function.literal"))
                 .then(getCommand)
                 .then(addCommand)
                 .then(removeCommand);
+
+        return functionCommandRoot;
     }
 }

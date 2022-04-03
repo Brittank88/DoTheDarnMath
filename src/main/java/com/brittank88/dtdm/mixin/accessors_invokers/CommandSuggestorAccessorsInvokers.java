@@ -23,6 +23,6 @@ public interface CommandSuggestorAccessorsInvokers {
 
     // Invokers
     @Invoker
-    @NotNull List<Suggestion> invokeSortSuggestions(Suggestions suggestions);
+    @NotNull List<Suggestion> invokeSortSuggestions(final Suggestions suggestions);
 }
 

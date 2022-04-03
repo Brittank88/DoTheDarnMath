@@ -30,7 +30,7 @@ public final class UniversalSuggestionProvider<T> implements SuggestionProvider<
      *
      * @param suggestions The {@link Iterable<String>}<{@link String}> to use as suggestions.
      */
-    public UniversalSuggestionProvider(@NotNull Function<@NotNull CommandContext<T>, @NotNull Iterable<@NotNull String>> suggestions) {
+    public UniversalSuggestionProvider(final @NotNull Function<@NotNull CommandContext<T>, @NotNull Iterable<@NotNull String>> suggestions) {
         this.suggestions = suggestions;
     }
 
@@ -39,7 +39,7 @@ public final class UniversalSuggestionProvider<T> implements SuggestionProvider<
      *
      * @param suggestions The {@link Iterable<String>}<{@link String}> to use as suggestions.
      */
-    public UniversalSuggestionProvider(@NotNull Supplier<@NotNull Iterable<@NotNull String>> suggestions) { this(ignored -> suggestions.get()); }
+    public UniversalSuggestionProvider(final @NotNull Supplier<@NotNull Iterable<@NotNull String>> suggestions) { this(ignored -> suggestions.get()); }
 
     /**
      * Builds and returns a {@link CompletableFuture<Suggestions>} containing all the {@link Suggestion Suggestions}.
@@ -48,7 +48,7 @@ public final class UniversalSuggestionProvider<T> implements SuggestionProvider<
      * @param builder The {@link SuggestionsBuilder} to add {@link Suggestion Suggestions} to.
      * @return A built {@link CompletableFuture<Suggestions>} containing the {@link Suggestion Suggestions}.
      */
-    @Override public @NotNull CompletableFuture<@NotNull Suggestions> getSuggestions(CommandContext<T> ctx, @NotNull SuggestionsBuilder builder) {
+    @Override public @NotNull CompletableFuture<@NotNull Suggestions> getSuggestions(final CommandContext<T> ctx, final @NotNull SuggestionsBuilder builder) {
         this.suggestions.apply(ctx).forEach(builder::suggest);
         return builder.buildFuture();
     }
@@ -57,5 +57,6 @@ public final class UniversalSuggestionProvider<T> implements SuggestionProvider<
 
     @Override public int hashCode() { return Objects.hash(suggestions); }
 
+    // TODO: Printing the suggestions variable isn't going to show all that much...
     @Override public String toString() { return "UniversalSuggestionProvider[suggestions=" + suggestions + ']'; } //NON-NLS
 }

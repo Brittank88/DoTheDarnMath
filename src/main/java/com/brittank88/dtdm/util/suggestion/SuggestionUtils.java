@@ -38,31 +38,31 @@ public abstract class SuggestionUtils {
      * @param narrateFirstSuggestion Whether to narrate the first suggestion.
      * @return The created {@link CommandSuggestor.SuggestionWindow SuggestionWindow} instance.
      */
-    public static CommandSuggestor.SuggestionWindow createSuggestionWindow(@NotNull ChatScreen chatScreen, @NotNull Suggestions suggestions, boolean narrateFirstSuggestion) {
+    public static CommandSuggestor.SuggestionWindow createSuggestionWindow(final @NotNull ChatScreen chatScreen, final @NotNull Suggestions suggestions, final boolean narrateFirstSuggestion) {
 
-        ChatScreenAccessors castChatScreen                     = (ChatScreenAccessors) chatScreen;
-        CommandSuggestor commandSuggestor                      = castChatScreen.getCommandSuggestor();
-        CommandSuggestorAccessorsInvokers castCommandSuggestor = (CommandSuggestorAccessorsInvokers) commandSuggestor;
+        final ChatScreenAccessors castChatScreen                     = (ChatScreenAccessors) chatScreen;
+        final CommandSuggestor commandSuggestor                      = castChatScreen.getCommandSuggestor();
+        final CommandSuggestorAccessorsInvokers castCommandSuggestor = (CommandSuggestorAccessorsInvokers) commandSuggestor;
 
         int width = 0;
         Suggestion suggestion;
-        TextRenderer textRenderer = castCommandSuggestor.getTextRenderer();
+        final TextRenderer textRenderer = castCommandSuggestor.getTextRenderer();
         for (
                 Iterator<Suggestion> var4 = suggestions.getList().iterator();
                 var4.hasNext();
                 width = Math.max(width, textRenderer.getWidth(suggestion.getText()))
         ) { suggestion = var4.next(); }
 
-        TextFieldWidget chatField = castChatScreen.getChatField();
-        int x = MathHelper.clamp(
+        final TextFieldWidget chatField = castChatScreen.getChatField();
+        final int x = MathHelper.clamp(
                 chatField.getCharacterX(suggestions.getRange().getStart()),
                 0,
                 chatField.getCharacterX(0) + chatField.getInnerWidth() - width
         );
 
-        int y = castCommandSuggestor.getChatScreenSized() ? castCommandSuggestor.getOwner().height - 12 : 72;
+        final int y = castCommandSuggestor.getChatScreenSized() ? castCommandSuggestor.getOwner().height - 12 : 72;
 
-        List<Suggestion> sortedSuggestions = castCommandSuggestor.invokeSortSuggestions(suggestions);
+        final List<Suggestion> sortedSuggestions = castCommandSuggestor.invokeSortSuggestions(suggestions);
 
         return SuggestionWindowAccessorsInvokers.create(commandSuggestor, x, y, width, sortedSuggestions, narrateFirstSuggestion);
     }
@@ -74,11 +74,11 @@ public abstract class SuggestionUtils {
      * @param suggestions The {@link Collection}<{@link Suggestion}> to convert.
      * @return The converted {@link Suggestions} instance.
      */
-    public static Suggestions fromSuggestionCollection(ChatScreen chatScreen, @NotNull Collection<Suggestion> suggestions) {
+    public static Suggestions fromSuggestionCollection(final ChatScreen chatScreen, final @NotNull Collection<Suggestion> suggestions) {
 
-        ChatScreenAccessors castChatScreen = (ChatScreenAccessors) chatScreen;
-        TextFieldWidget chatField = castChatScreen.getChatField();
-        int cursor = chatField.getCursor();
+        final ChatScreenAccessors castChatScreen = (ChatScreenAccessors) chatScreen;
+        final TextFieldWidget chatField = castChatScreen.getChatField();
+        final int cursor = chatField.getCursor();
 
         return CommandSource.suggestMatching(
                 suggestions.stream().map(Suggestion::getText).collect(Collectors.toList()),
@@ -93,8 +93,8 @@ public abstract class SuggestionUtils {
      * @param chatField The {@link TextFieldWidget chatField} to create the {@link StringReader} for.
      * @return The created {@link StringReader} instance.
      */
-    public static @NotNull StringReader getReaderAtCursor(@NotNull TextFieldWidget chatField) {
-        StringReader reader = new StringReader(chatField.getText());
+    public static @NotNull StringReader getReaderAtCursor(final @NotNull TextFieldWidget chatField) {
+        final StringReader reader = new StringReader(chatField.getText());
         reader.setCursor(chatField.getCursor());
         return reader;
     }
@@ -108,7 +108,7 @@ public abstract class SuggestionUtils {
      * @param end The {@link Integer end} (exclusive) point.
      * @return The created {@link Collection}<{@link String}> of suggestions.
      */
-    public static Collection<String> suggestFromIntRange(String prefix, int start, int end) {
+    public static Collection<String> suggestFromIntRange(final String prefix, final int start, final int end) {
         return IntStream.range(start, end).mapToObj(i -> prefix + i).collect(Collectors.toList());
     }
 
@@ -121,7 +121,5 @@ public abstract class SuggestionUtils {
      * @param offset The {@link Integer offset} to use.
      * @return The created {@link Collection}<{@link String}> of suggestions.
      */
-    public static Collection<String> suggestionFromIntOffset(@NotNull String prefix, int start, int offset) {
-        return suggestFromIntRange(prefix, start, start + offset);
-    }
+    public static Collection<String> suggestionFromIntOffset(final @NotNull String prefix, final int start, final int offset) { return suggestFromIntRange(prefix, start, start + offset);}
 }

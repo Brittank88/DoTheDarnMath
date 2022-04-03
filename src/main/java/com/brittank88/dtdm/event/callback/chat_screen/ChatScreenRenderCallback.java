@@ -10,7 +10,7 @@ public interface ChatScreenRenderCallback {
 
     Event<ChatScreenRenderCallback> EVENT = EventFactory.createArrayBacked(ChatScreenRenderCallback.class,
             listeners -> (matrices, mouseX, mouseY, delta) -> {
-                for (ChatScreenRenderCallback listener : listeners) {
+                for (final ChatScreenRenderCallback listener : listeners) {
                     ActionResult result = listener.interact(matrices, mouseX, mouseY, delta);
                     if (result != ActionResult.PASS) { return result; }
                 }
@@ -18,5 +18,5 @@ public interface ChatScreenRenderCallback {
             }
     );
 
-    @NotNull ActionResult interact(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    @NotNull ActionResult interact(final MatrixStack matrices, final int mouseX, final int mouseY, final float delta);
 }

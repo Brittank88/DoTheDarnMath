@@ -31,12 +31,12 @@ public abstract class BooleanUtils {
 
         public static abstract class CommandTools {
 
-            public static @NotNull Integer sendTruthTable(CommandContext<ServerCommandSource> ctx, ImmutableMap<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> truthTables) {
+            public static @NotNull Integer sendTruthTable(final CommandContext<ServerCommandSource> ctx, final ImmutableMap<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> truthTables) {
 
-                String truthTableName = ctx.getArgument(I18n.translate("commands.generic.argument.name"), String.class);
-                ImmutableMap<Double, ImmutableMap<Double, Double>> truthTable = truthTables.get(truthTableName);
+                final String truthTableName = ctx.getArgument(I18n.translate("commands.generic.argument.name"), String.class);
+                final ImmutableMap<Double, ImmutableMap<Double, Double>> truthTable = truthTables.get(truthTableName);
                 if (truthTable == null) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", truthTableName)));
-                StringBuilder truthTableString = new StringBuilder()
+                final StringBuilder truthTableString = new StringBuilder()
 
                         .append("o===o===o===o===o\n") // NON-NLS
 
@@ -54,9 +54,9 @@ public abstract class BooleanUtils {
                         .append(BooleanUtils.StringTools.booleanDoubleToString(BooleanAlgebra.N, false))
                         .append("_|:|");
 
-                for (Double ftn : FTN_DOUBLES) {
-                    ImmutableMap<Double, Double> row = truthTable.get(ftn);
-                    String ftnString = BooleanUtils.StringTools.booleanDoubleToString(ftn, false);
+                for (final Double ftn : FTN_DOUBLES) {
+                    final ImmutableMap<Double, Double> row = truthTable.get(ftn);
+                    final String ftnString = BooleanUtils.StringTools.booleanDoubleToString(ftn, false);
                     if (row == null) throw new CommandException(Text.of(I18n.translate("message.error.boolean.truthTable.row_not_found", truthTableName, ftnString)));
 
                     truthTableString
@@ -75,7 +75,7 @@ public abstract class BooleanUtils {
 
                 truthTableString.append("\no===o===o===o===o"); // NON-NLS
 
-                for (Double ftn : FTN_DOUBLES) {
+                for (final Double ftn : FTN_DOUBLES) {
                     truthTableString.append("\n|:|_")
                             .append(StringUtils.rightPad(
                                     BooleanUtils.StringTools.booleanDoubleToString(ftn, false)
@@ -116,12 +116,12 @@ public abstract class BooleanUtils {
              * @param classes The {@link ImmutableMap<Class>} of {@link Class classes} to retrieve truth tables for.
              * @return A {@link ImmutableMap} of {@link ImmutableMap truth tables} keyed by {@link String name}.
              */
-            private static ImmutableMap<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> getTruthTablesFromClasses(@NotNull final Class<?> @NotNull ... classes) {
+            private static ImmutableMap<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> getTruthTablesFromClasses(final @NotNull Class<?> @NotNull ... classes) {
 
-                ImmutableMap.Builder<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> truthTables = ImmutableMap.builder();
+                final ImmutableMap.Builder<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> truthTables = ImmutableMap.builder();
 
-                for (Class<?> c : classes) {
-                    for (Field f : c.getDeclaredFields()) {
+                for (final Class<?> c : classes) {
+                    for (final Field f : c.getDeclaredFields()) {
 
                         // Get the field type.
                         Class<?> type = f.getType();
@@ -136,9 +136,9 @@ public abstract class BooleanUtils {
                         if (!(is2DArray ? type.getComponentType() : type).getComponentType().getName().equals("double")) continue;
 
                         // Get the field's value.
-                        Object value;
+                        final Object value;
                         try { value = f.get(null); }
-                        catch (IllegalAccessException e) { continue; }
+                        catch (final IllegalAccessException e) { continue; }
                         double[][] truthTable = is2DArray ? (double[][]) value : new double[][] { (double[]) value };
 
                         // Ensure the truth table has the correct dimensions.
@@ -150,10 +150,10 @@ public abstract class BooleanUtils {
                         )) || truthTable[0].length != 3) continue;
 
                         // Get the name.
-                        String name = f.getName().toUpperCase().replace("_TRUTH_TABLE", "");  // NON-NLS
+                        final String name = f.getName().toUpperCase().replace("_TRUTH_TABLE", "");  // NON-NLS
 
                         // Convert truth table rows to ImmutableMap objects.
-                        ImmutableMap.Builder<Double, ImmutableMap<Double, Double>> truthTableValues = ImmutableMap.builder();
+                        final ImmutableMap.Builder<Double, ImmutableMap<Double, Double>> truthTableValues = ImmutableMap.builder();
                         for (int i = 0; i < truthTable.length; i++) {
                             truthTableValues.put(FTN_DOUBLES[i], ImmutableMap.of(
                                     BooleanAlgebra.F, truthTable[i][0],

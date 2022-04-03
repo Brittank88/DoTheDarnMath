@@ -9,7 +9,7 @@ public interface ChatScreenKeyPressedCallback {
 
     Event<ChatScreenKeyPressedCallback> EVENT = EventFactory.createArrayBacked(ChatScreenKeyPressedCallback.class,
             listeners -> (keyCode, scanCode, modifiers) -> {
-                for (ChatScreenKeyPressedCallback listener : listeners) {
+                for (final ChatScreenKeyPressedCallback listener : listeners) {
                     ActionResult result = listener.interact(keyCode, scanCode, modifiers);
                     if (result != ActionResult.PASS) { return result; }
                 }
@@ -17,5 +17,5 @@ public interface ChatScreenKeyPressedCallback {
             }
     );
 
-    @NotNull ActionResult interact(int keyCode, int scanCode, int modifiers);
+    @NotNull ActionResult interact(final int keyCode, final int scanCode, final int modifiers);
 }

@@ -18,12 +18,12 @@ public enum FunctionCategory {
 
     private final boolean isDefault;
 
-    FunctionCategory(boolean isDefault) { this.isDefault = isDefault; }
+    FunctionCategory(final boolean isDefault) { this.isDefault = isDefault; }
 
     /**
      * Returns whether this {@link FunctionCategory} is default or user-defined.
      *
      * @return {@link Boolean True} if it is default, {@link Boolean False} if it is user-defined.
      */
-    public boolean isDefault() { return this.isDefault; }
+    public final boolean isDefault() { return this.isDefault; }
 }

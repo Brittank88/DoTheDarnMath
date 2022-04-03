@@ -73,10 +73,10 @@ public abstract class FunctionCoordinator {
      */
     @SuppressWarnings("SameReturnValue")
     public static @NotNull Integer addFunction(
-            @NotNull String name,
-            @NotNull String @NotNull [] parameters,
-            @NotNull String expression,
-            CommandContext<ServerCommandSource> ctx
+            final @NotNull String name,
+            final @NotNull String @NotNull [] parameters,
+            final @NotNull String expression,
+            final CommandContext<ServerCommandSource> ctx
     ) throws CommandException {
 
         // Check that function name and expression are valid and don't already exist as a default function.
@@ -84,15 +84,15 @@ public abstract class FunctionCoordinator {
         if (expression.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.expression.empty")));
         if (name.contains(" ")) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.spaces")));
 
-        String parameterString = Arrays.stream(parameters).map(Object::toString).collect(Collectors.joining(", "));
-        String functionDefinitionString = name + "(" + parameterString + ")=" + expression;
+        final String parameterString = Arrays.stream(parameters).map(Object::toString).collect(Collectors.joining(", "));
+        final String functionDefinitionString = name + "(" + parameterString + ")=" + expression;
 
-        Function newFunction = new Function(functionDefinitionString);
-        Function existingFunction = getUserFunctions().stream()
+        final Function newFunction = new Function(functionDefinitionString);
+        final Function existingFunction = getUserFunctions().stream()
                 .filter(f -> FunctionUtils.ComparisonTools.compareName(f, new Function(functionDefinitionString))
                         && FunctionUtils.ComparisonTools.compareParameters(f, new Function(functionDefinitionString)))
                 .findFirst().orElse(null);
-        String message;
+        final String message;
         if (existingFunction != null) {
             message = I18n.translate(
                     "message.warning.function.override",
@@ -137,7 +137,7 @@ public abstract class FunctionCoordinator {
      * @throws CommandException If the {@link String name} is invalid or references a default {@link Function}.
      */
     @SuppressWarnings("SameReturnValue")
-    public static @NotNull Integer removeFunction(@NotNull String name, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer removeFunction(final @NotNull String name, final @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (name.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.empty")));
         if (name.contains(" ")) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.spaces")));
         if (getAllDefaultFunctions().stream().anyMatch(f -> f.getFunctionName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.function.remove_default", name)));
@@ -151,5 +151,4 @@ public abstract class FunctionCoordinator {
         // Return success.
         return 1;
     }
-
 }

@@ -51,7 +51,7 @@ public @NonNls abstract class SuggestionSupplierRegistry {
                                 reader.setCursor(i);
 
                                 // Read out an expression between the current index i and the end position.
-                                StringBuilder expressionString = new StringBuilder();
+                                final StringBuilder expressionString = new StringBuilder();
                                 while (reader.canRead() && reader.getCursor() < end) expressionString.append(reader.read());
 
                                 // Ensure this expression begins at the start of the string or is preceded by a whitespace:
@@ -76,7 +76,7 @@ public @NonNls abstract class SuggestionSupplierRegistry {
 
                 return ActionResult.PASS;
             });
-        } catch (Exception e) { throw new RegistrationFailedException(e, RegistrationFailedException.REGISTRY_TYPE.SUGGESTION_SUPPLIER); }
+        } catch (final Exception e) { throw new RegistrationFailedException(e, RegistrationFailedException.REGISTRY_TYPE.SUGGESTION_SUPPLIER); }
 
         DTDMClient.LOGGER.info("(SuggestionSupplierRegistry) Registration complete!");
     }

@@ -25,16 +25,18 @@ public abstract class ExpressionUtils {
          * @return The result of the {@link Expression}.
          * @throws CommandException If the {@link Expression} fails to parse or calculate.
          */
-        public static @NotNull Double calculateExpression(@NotNull Expression expression) throws CommandException {
+        public static @NotNull Double calculateExpression(final @NotNull Expression expression) throws CommandException {
 
             // Add all missing user-defined constants and functions.
             try {
                 FunctionUtils.PopulationTools.populateExpression(expression);   // Populate functions first, otherwise function names may be seen as missing constants.
                 ConstantUtils.PopulationTools.populateExpression(expression);   // Then populate the constants.
-            } catch (RuntimeException e) { throw new CommandException(Text.of(I18n.translate("message.error.expression.population", e.getLocalizedMessage()))); }
+            } catch (final RuntimeException e) { throw new CommandException(Text.of(I18n.translate("message.error.expression.population", e.getLocalizedMessage()))); }
 
-            double result;
-            try { result = expression.calculate(); } catch (Exception e) { throw new CommandException(Text.of(I18n.translate("message.error.expression.calculation", e.getLocalizedMessage()))); }
+            final double result;
+            try { result = expression.calculate(); } catch (final Exception e) {
+                throw new CommandException(Text.of(I18n.translate("message.error.expression.calculation", e.getLocalizedMessage())));
+            }
 
             if (!expression.checkSyntax()) throw new CommandException(Text.of(I18n.translate("message.error.expression.syntax", expression.getErrorMessage())));
 
@@ -49,9 +51,11 @@ public abstract class ExpressionUtils {
          * @return The result of the {@link String expression string}.
          * @throws CommandException If the {@link String string expression} fails to parse or calculate.
          */
-        public static @NotNull Double calculateExpression(@NotNull String expression) throws CommandException {
-            Expression expr;
-            try { expr = new Expression(expression); } catch (Exception e) { throw new CommandException(Text.of(I18n.translate("message.error.expression.parse", e.getLocalizedMessage()))); }
+        public static @NotNull Double calculateExpression(final @NotNull String expression) throws CommandException {
+            final Expression expr;
+            try { expr = new Expression(expression); } catch (final Exception e) {
+                throw new CommandException(Text.of(I18n.translate("message.error.expression.parse", e.getLocalizedMessage())));
+            }
             return calculateExpression(expr);
         }
 
@@ -63,14 +67,14 @@ public abstract class ExpressionUtils {
          * @throws CommandSyntaxException If the {@link String string expression} from the {@link CommandContext<ServerCommandSource>} fails to parse or calculate.
          */
         @SuppressWarnings("SameReturnValue")
-        public static int sendCalculation(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+        public static int sendCalculation(final CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
 
             // Send feedback to the player.
-            String expression = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.expression"));
+            final String expression = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.expression"));
             ctx.getSource().sendFeedback(Text.of(expression + " = " + calculateExpression(expression)), false);
 
             // Broadcast to players in the selector (excluding the player who issued the command).
-            ServerPlayerEntity playerEntity = ctx.getSource().getPlayer();
+            final ServerPlayerEntity playerEntity = ctx.getSource().getPlayer();
             try {
                 EntityArgumentType.getPlayers(ctx, I18n.translate("commands.generic.argument.target"))
                         .stream().filter(target -> !target.equals(playerEntity))
@@ -80,7 +84,7 @@ public abstract class ExpressionUtils {
                                 expression,
                                 ExpressionUtils.CalculationTools.calculateExpression(expression)
                         )), false));
-            } catch (IllegalArgumentException ignored) {}
+            } catch (final IllegalArgumentException ignored) {}
 
             // Return command status integer.
             return 1;

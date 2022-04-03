@@ -34,10 +34,10 @@ public class FunctionParametersArgumentType implements ArgumentType<String[]> {
      * @param str The string to surround.
      * @return The string surrounded by braces.
      */
-    private static @NotNull String appendBraces(String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
+    private static @NotNull String appendBraces(final String str) { return BRACES.getLeft() + str + BRACES.getRight(); }
 
     /** A list of examples of valid parameter inputs. **/
-    private @NonNls static final List<String> EXAMPLES = Stream.of(
+    private static final @NonNls List<String> EXAMPLES = Stream.of(
             "x",                                        // Single single-letter parameter.
             "x,y,z", "x, y, z",                         // Multiple single-letter parameters separated by commas.
             "x;y;z", "x; y; z",                         // Multiple single-letter parameters separated by semicolons.
@@ -67,7 +67,7 @@ public class FunctionParametersArgumentType implements ArgumentType<String[]> {
      * @param name The name of the argument to parse.
      * @return The {@link ArrayList<String> results} of the argument parsing.
      */
-    public static @NotNull String @NotNull [] getFunctionParameters(CommandContext<ServerCommandSource> ctx, String name) { return ctx.getArgument(name, String[].class); }
+    public static @NotNull String @NotNull [] getFunctionParameters(final CommandContext<ServerCommandSource> ctx, String name) { return ctx.getArgument(name, String[].class); }
 
     /**
      * Uses the supplied {@link StringReader} defined on the argument {@link String} to produce a list of function parameters, if possible.
@@ -76,13 +76,13 @@ public class FunctionParametersArgumentType implements ArgumentType<String[]> {
      * @return A {@link List<String>} of {@link String function parameters}.
      * @throws CommandSyntaxException If the parse failed.
      */
-    @Override public @NotNull String @NotNull [] parse(@NotNull StringReader reader) throws CommandSyntaxException {
+    @Override public final @NotNull String @NotNull [] parse(final @NotNull StringReader reader) throws CommandSyntaxException {
 
         // Ensure we can read forward, and that the opening brace is present.
         if (!reader.canRead() || reader.read() != BRACES.getLeft()) throw INVALID_PARAM_EXCEPTION.create();
 
         // Read the parameters.
-        List<String> params = new ArrayList<>();
+        final List<String> params = new ArrayList<>();
         StringBuilder currentParam = new StringBuilder();
         while (reader.canRead() && reader.peek() != BRACES.getRight()) {
 
@@ -115,6 +115,9 @@ public class FunctionParametersArgumentType implements ArgumentType<String[]> {
         // This is still required as the while loop may have existed as a result of reader#canRead() returning false.
         if (!reader.canRead() || reader.read() != BRACES.getRight()) throw INVALID_PARAM_EXCEPTION.create();
 
+        // Account for the last parameter that was not added to the list by the loop.
+        if (!currentParam.isEmpty()) params.add(currentParam.toString());
+
         // Return the parameters.
         return params.toArray(String[]::new);
     }
@@ -124,5 +127,5 @@ public class FunctionParametersArgumentType implements ArgumentType<String[]> {
      *
      * @return A {@link Collection<String>} of examples of {@link String valid parameter inputs}.
      */
-    @Override public Collection<String> getExamples() { return EXAMPLES; }
+    @Override public final Collection<String> getExamples() { return EXAMPLES; }
 }

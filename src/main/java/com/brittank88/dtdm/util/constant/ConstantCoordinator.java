@@ -64,7 +64,7 @@ public abstract class ConstantCoordinator {
      * @throws CommandException If the function {@link String name} is invalid, or the {@link String name} references a default {@link Constant}.
      */
     @SuppressWarnings("SameReturnValue")
-    public static @NotNull Integer addConstant(@NotNull String name, double value, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer addConstant(final @NotNull String name, final double value, final @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
 
         // Check that constant name is valid and doesn't already exist as a default constant.
         if (name.isEmpty()) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.empty")));
@@ -72,7 +72,7 @@ public abstract class ConstantCoordinator {
         if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.constant.override", name)));
 
         Constant constant = getUserConstants().stream().filter(c -> c.getConstantName().equals(name)).findFirst().orElse(null);
-        String message;
+        final String message;
         if (constant != null) {
             message = I18n.translate("message.warning.constant.override", name, constant.getConstantValue(), value);
             constant.setConstantValue(value);
@@ -96,7 +96,7 @@ public abstract class ConstantCoordinator {
      * @throws CommandException If the {@link String name} references a default {@link Constant} or none at all.
      */
     @SuppressWarnings("SameReturnValue")
-    public static @NotNull Integer removeConstant(@NotNull String name, @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
+    public static @NotNull Integer removeConstant(final @NotNull String name, final @NotNull CommandContext<ServerCommandSource> ctx) throws CommandException {
         if (getAllDefaultConstants().stream().anyMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.constant.remove_default", name)));
         if (getUserConstants().stream().noneMatch(c -> c.getConstantName().equals(name))) throw new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name)));
 

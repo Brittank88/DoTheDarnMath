@@ -22,8 +22,9 @@ public abstract class ConstantCommand {
 
     public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(I18n.translate("commands.generic.literal.get"));
-        for (Map.Entry<ConstantCategory, Collection<Constant>> entry : ConstantCoordinator.CONSTANTS.entrySet()) {
+        /* Command for getting the value of a default or user-defined constant. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> getCommand = CommandManager.literal(I18n.translate("commands.generic.literal.get"));
+        for (final Map.Entry<ConstantCategory, Collection<Constant>> entry : ConstantCoordinator.CONSTANTS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
                             .suggests(new UniversalSuggestionProvider<>(() -> entry.getValue().stream()
@@ -36,7 +37,8 @@ public abstract class ConstantCommand {
 
         // TODO: Support expressions that evaluate to a double as the value argument.
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(I18n.translate("commands.generic.literal.add"))
+        /* Command for adding a new user-defined constant, or setting the value of an existing user-defined constant. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> addCommand = CommandManager.literal(I18n.translate("commands.generic.literal.add"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(() -> SuggestionUtils.suggestionFromIntOffset(
                                 "C", ConstantCoordinator.getUserConstants().size(), 3 // NON-NLS
@@ -49,14 +51,18 @@ public abstract class ConstantCommand {
                         )
                 );
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(I18n.translate("commands.generic.literal.remove"))
+        /* Command for removing a user-defined constant. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(I18n.translate("commands.generic.literal.remove"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
                         .executes(ctx -> ConstantCoordinator.removeConstant(StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name")), ctx))
                 );
 
-        return CommandManager.literal(I18n.translate("commands.dtdm.constant.literal"))
+        /* Root for all constant-related commands. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> constantCommandRoot = CommandManager.literal(I18n.translate("commands.dtdm.constant.literal"))
                 .then(getCommand)
                 .then(addCommand)
                 .then(removeCommand);
+
+        return constantCommandRoot;
     }
 }

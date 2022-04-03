@@ -9,7 +9,7 @@ public interface ChatScreenMouseClickedCallback {
 
     Event<ChatScreenMouseClickedCallback> EVENT = EventFactory.createArrayBacked(ChatScreenMouseClickedCallback.class,
             listeners -> (mouseX, mouseY, button) -> {
-                for (ChatScreenMouseClickedCallback listener : listeners) {
+                for (final ChatScreenMouseClickedCallback listener : listeners) {
                     ActionResult result = listener.interact(mouseX, mouseY, button);
                     if (result != ActionResult.PASS) { return result; }
                 }
@@ -17,5 +17,5 @@ public interface ChatScreenMouseClickedCallback {
             }
     );
 
-    @NotNull ActionResult interact(double mouseX, double mouseY, int button);
+    @NotNull ActionResult interact(final double mouseX, final double mouseY, final int button);
 }

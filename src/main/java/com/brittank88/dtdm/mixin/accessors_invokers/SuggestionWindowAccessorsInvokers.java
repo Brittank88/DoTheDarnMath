@@ -11,12 +11,18 @@ import java.util.List;
 
 @Mixin(CommandSuggestor.SuggestionWindow.class)
 public interface SuggestionWindowAccessorsInvokers {
+
     // Accessors
     @Accessor int getLastNarrationIndex();
 
     // Invokers
     @SuppressWarnings("unused")
-    @Invoker("<init>") static CommandSuggestor.@NotNull SuggestionWindow create(CommandSuggestor outer, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion) { //NON-NLS
-        throw new UnsupportedOperationException("Invoker method stub called directly!");
-    }
+    @Invoker("<init>") static CommandSuggestor.@NotNull SuggestionWindow create(    // NON-NLS
+            final CommandSuggestor outer,
+            final int x,
+            final int y,
+            final int width,
+            final List<Suggestion> suggestions,
+            final boolean narrateFirstSuggestion
+    ) { throw new UnsupportedOperationException("Invoker method stub called directly!"); }
 }

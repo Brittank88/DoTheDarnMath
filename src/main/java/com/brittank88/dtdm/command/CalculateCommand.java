@@ -14,7 +14,8 @@ public abstract class CalculateCommand {
 
     public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> calculateCommand = CommandManager.literal(I18n.translate("commands.dtdm.calculate.literal"))
+        /* Root for all calculation-related commands. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> calculateCommandRoot = CommandManager.literal(I18n.translate("commands.dtdm.calculate.literal"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.expression"), StringArgumentType.string())
                         .executes(ExpressionUtils.CalculationTools::sendCalculation)
                         .then(CommandManager.argument(I18n.translate("commands.generic.argument.target"), EntityArgumentType.players())
@@ -22,6 +23,6 @@ public abstract class CalculateCommand {
                         )
                 );
 
-        return calculateCommand;
+        return calculateCommandRoot;
     }
 }

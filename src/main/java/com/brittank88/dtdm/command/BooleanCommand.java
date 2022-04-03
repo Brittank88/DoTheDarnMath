@@ -14,15 +14,20 @@ public abstract class BooleanCommand {
 
     public static @NotNull LiteralArgumentBuilder<ServerCommandSource> build() {
 
-        ImmutableMap<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> truthTables = BooleanUtils.TruthTable.ClassTools.getTruthTables();
+        /* Map of all boolean truth tables, keyed by name. */
+        final ImmutableMap<String, ImmutableMap<Double, ImmutableMap<Double, Double>>> truthTables = BooleanUtils.TruthTable.ClassTools.getTruthTables();
 
-        @NotNull LiteralArgumentBuilder<ServerCommandSource> truthTableCommand = CommandManager.literal(I18n.translate("commands.dtdm.boolean.truthTable"))
+        /* Commands related to truth tables. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> truthTableCommand = CommandManager.literal(I18n.translate("commands.dtdm.boolean.truthTable"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
                         .suggests(new UniversalSuggestionProvider<>(truthTables::keySet))
                         .executes(ctx -> BooleanUtils.TruthTable.CommandTools.sendTruthTable(ctx, truthTables))
                 );
 
-        return CommandManager.literal(I18n.translate("commands.dtdm.boolean.literal"))
+        /* Root for all boolean-related commands. */
+        final @NotNull LiteralArgumentBuilder<ServerCommandSource> booleanCommandRoot = CommandManager.literal(I18n.translate("commands.dtdm.boolean.literal"))
                 .then(truthTableCommand);
+
+        return booleanCommandRoot;
     }
 }

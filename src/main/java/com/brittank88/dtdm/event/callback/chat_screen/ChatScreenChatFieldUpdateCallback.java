@@ -9,7 +9,7 @@ public interface ChatScreenChatFieldUpdateCallback {
 
     Event<ChatScreenChatFieldUpdateCallback> EVENT = EventFactory.createArrayBacked(ChatScreenChatFieldUpdateCallback.class,
             listeners -> chatText -> {
-                for (ChatScreenChatFieldUpdateCallback listener : listeners) {
+                for (final ChatScreenChatFieldUpdateCallback listener : listeners) {
                     ActionResult result = listener.interact(chatText);
                     if (result != ActionResult.PASS) { return result; }
                 }
@@ -17,5 +17,5 @@ public interface ChatScreenChatFieldUpdateCallback {
             }
     );
 
-    @NotNull ActionResult interact(String chatText);
+    @NotNull ActionResult interact(final String chatText);
 }

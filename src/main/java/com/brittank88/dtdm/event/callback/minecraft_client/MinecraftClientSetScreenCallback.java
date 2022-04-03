@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public interface MinecraftClientSetScreenCallback {
     Event<MinecraftClientSetScreenCallback> EVENT = EventFactory.createArrayBacked(MinecraftClientSetScreenCallback.class,
             listeners -> screen -> {
-                for (MinecraftClientSetScreenCallback listener : listeners) {
+                for (final MinecraftClientSetScreenCallback listener : listeners) {
                     ActionResult result = listener.interact(screen);
                     if (result != ActionResult.PASS) { return result; }
                 }
@@ -18,5 +18,5 @@ public interface MinecraftClientSetScreenCallback {
             }
     );
 
-    @NotNull ActionResult interact(@Nullable Screen screen);
+    @NotNull ActionResult interact(final @Nullable Screen screen);
 }

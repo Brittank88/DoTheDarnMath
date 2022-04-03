@@ -21,15 +21,15 @@ public abstract class FunctionUtils {
 
     public abstract static class PopulationTools {
 
-        public static void populateExpression(@NotNull Expression expression) throws RuntimeException {
+        public static void populateExpression(final @NotNull Expression expression) throws RuntimeException {
 
-            for (String missingFuncName : expression.getMissingUserDefinedFunctions()) {
+            for (final String missingFuncName : expression.getMissingUserDefinedFunctions()) {
 
-                Function missingFunc = FunctionCoordinator.getUserFunctions().stream()
-                        .filter(userFunction -> userFunction.getFunctionName().equals(missingFuncName))
-                        .findFirst().orElseThrow(() -> new RuntimeException("Missing user-defined function: " + missingFuncName));
-
-                expression.addFunctions(missingFunc);
+                expression.addFunctions(
+                        FunctionCoordinator.getUserFunctions().stream()
+                                .filter(userFunction -> userFunction.getFunctionName().equals(missingFuncName))
+                                .findFirst().orElseThrow(() -> new RuntimeException("Missing user-defined function: " + missingFuncName))
+                );
             }
         }
     }
@@ -46,13 +46,13 @@ public abstract class FunctionUtils {
          * @param g The second {@link Function} of the comparison.
          * @return {@code true} if the {@link Function}s are equal, {@code false} otherwise.
          */
-        public static boolean compareAll(@NotNull Function f, @NotNull Function g) { return compareName(f, g) && compareExpression(f, g) && compareParameters(f, g); }
+        public static boolean compareAll(final @NotNull Function f, final @NotNull Function g) { return compareName(f, g) && compareExpression(f, g) && compareParameters(f, g); }
 
-        public static boolean compareName(@NotNull Function f, @NotNull Function g) { return f.getFunctionName().equals(g.getFunctionName()); }
+        public static boolean compareName(final @NotNull Function f, final @NotNull Function g) { return f.getFunctionName().equals(g.getFunctionName()); }
 
-        public static boolean compareExpression(@NotNull Function f, @NotNull Function g) { return f.getFunctionExpressionString().equals(g.getFunctionExpressionString()); }
+        public static boolean compareExpression(final @NotNull Function f, final @NotNull Function g) { return f.getFunctionExpressionString().equals(g.getFunctionExpressionString()); }
 
-        public static boolean compareParameters(@NotNull Function f, @NotNull Function g) {
+        public static boolean compareParameters(final @NotNull Function f, final @NotNull Function g) {
             return f.getParametersNumber() == g.getParametersNumber()
                     && IntStream.range(0, f.getParametersNumber())
                     .mapToObj(i -> new Pair<>(f.getParameterName(i), g.getParameterName(i)))
@@ -62,19 +62,19 @@ public abstract class FunctionUtils {
 
     public static abstract class StringTools {
 
-        public static @NotNull String getFunctionDisplayString(@NotNull Function function, boolean includeBody) {
+        public static @NotNull String getFunctionDisplayString(final @NotNull Function function, final boolean includeBody) {
             return function.getFunctionName() + getFunctionParameterSetString(function) + (includeBody ? '=' + function.getFunctionExpressionString() : "");
         }
 
-        public static @NotNull String getFunctionParameterSetString(@NotNull Function function) {
+        public static @NotNull String getFunctionParameterSetString(final @NotNull Function function) {
             return "(" + formatParametersToString(getAllParameterStrings(function))  + ")";
         }
 
-        public static @NotNull Collection<String> getAllParameterStrings(@NotNull Function function) {
+        public static @NotNull Collection<String> getAllParameterStrings(final @NotNull Function function) {
             return IntStream.range(0, function.getParametersNumber()).mapToObj(function::getParameterName).collect(Collectors.toList());
         }
 
-        public static @NotNull String formatParametersToString(@NotNull Collection<String> parameters) {
+        public static @NotNull String formatParametersToString(final @NotNull Collection<String> parameters) {
             return parameters.stream().map(Object::toString).collect(Collectors.joining(", "));
         }
     }
@@ -90,15 +90,15 @@ public abstract class FunctionUtils {
          * @throws CommandException If the {@link Function} could not be found.
          */
         @SuppressWarnings("SameReturnValue")
-        public static @NotNull Integer sendFunction(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Collection<Function> functions) throws CommandException {
+        public static @NotNull Integer sendFunction(final @NotNull CommandContext<ServerCommandSource> ctx, final @NotNull Collection<Function> functions) throws CommandException {
 
-            String name = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"));
+            final String name = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"));
 
-            Function function = functions.stream()
+            final Function function = functions.stream()
                     .filter(f -> f.getFunctionName().equals(name))
                     .findFirst().orElseThrow(() -> new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name))));
 
-            String descriptionString = function.getDescription();
+            final String descriptionString = function.getDescription();
             ctx.getSource().sendFeedback(Text.of(
                     StringTools.getFunctionDisplayString(function, true)
                             + I18n.translate("message.info.function.compute_time", function.getComputingTime())
@@ -119,10 +119,10 @@ public abstract class FunctionUtils {
          * @param classes {@link Class Classes} to get {@link Function Functions} from.
          * @return A {@link Collection<Function>} of {@link Function Functions}.
          */
-        static @NotNull Collection<@NotNull Function> getFunctionsFromClasses(@NotNull final Class<?> @NotNull ... classes) {
-            Collection<Function> functions = new ArrayList<>(classes.length);
-            for (Class<?> c : classes) {
-                for (Method m : c.getDeclaredMethods()) {
+        static @NotNull Collection<@NotNull Function> getFunctionsFromClasses(final @NotNull Class<?> @NotNull ... classes) {
+            final Collection<Function> functions = new ArrayList<>(classes.length);
+            for (final Class<?> c : classes) {
+                for (final Method m : c.getDeclaredMethods()) {
                     if (m.getParameterCount() > 0 && m.getReturnType() == double.class) {
                         functions.add(new Function(m.getName(), new FunctionExtensionMethodWrapper(m)));
                     }

@@ -9,7 +9,7 @@ public enum ConstantCategory {
 
     private final boolean isDefault;
 
-    ConstantCategory(boolean isDefault) { this.isDefault = isDefault; }
+    ConstantCategory(final boolean isDefault) { this.isDefault = isDefault; }
 
     /**
      * Returns whether this {@link ConstantCategory} is default or user-defined.

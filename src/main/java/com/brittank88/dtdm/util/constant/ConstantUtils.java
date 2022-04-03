@@ -18,15 +18,15 @@ public abstract class ConstantUtils {
 
     public abstract static class PopulationTools {
 
-        public static void populateExpression(@NotNull Expression expression) {
+        public static void populateExpression(final @NotNull Expression expression) {
 
-            for (String missingConstName : expression.getMissingUserDefinedArguments()) {
+            for (final String missingConstName : expression.getMissingUserDefinedArguments()) {
 
-                Constant missingConst = ConstantCoordinator.getUserConstants().stream()
-                        .filter(userConstant -> userConstant.getConstantName().equals(missingConstName))
-                        .findFirst().orElseThrow(() -> new RuntimeException("Missing user-defined constant: " + missingConstName));
-
-                expression.addConstants(missingConst);
+                expression.addConstants(
+                        ConstantCoordinator.getUserConstants().stream()
+                                .filter(userConstant -> userConstant.getConstantName().equals(missingConstName))
+                                .findFirst().orElseThrow(() -> new RuntimeException("Missing user-defined constant: " + missingConstName))
+                );
             }
         }
     }
@@ -42,11 +42,11 @@ public abstract class ConstantUtils {
          * @throws CommandException If the {@link Constant} could not be found.
          */
         @SuppressWarnings("SameReturnValue")
-        public static @NotNull Integer sendConstant(@NotNull CommandContext<ServerCommandSource> ctx, @NotNull Collection<Constant> constants) throws CommandException {
+        public static @NotNull Integer sendConstant(final @NotNull CommandContext<ServerCommandSource> ctx, final @NotNull Collection<Constant> constants) throws CommandException {
 
-            String name = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"));
+            final String name = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"));
 
-            Double value = constants.stream()
+            final Double value = constants.stream()
                     .filter(c -> c.getConstantName().equals(name))
                     .map(Constant::getConstantValue)
                     .findFirst().orElseThrow(() -> new CommandException(Text.of(I18n.translate("message.error.name.generic.nonexistent", name))));

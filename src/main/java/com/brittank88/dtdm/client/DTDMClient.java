@@ -15,7 +15,6 @@ public @NonNls class DTDMClient implements ClientModInitializer {
 
     // TODO: Hack in complex numbers support???
     // TODO: Extra support for unicode math symbols?
-    // TODO: Make all possible function parameters final.
     // TODO: Unit conversion commands.
 
     public static final String MOD_ID = "dtdm";
@@ -26,7 +25,7 @@ public @NonNls class DTDMClient implements ClientModInitializer {
         try {
             CommandRegistry.register();
             SuggestionSupplierRegistry.register();
-        } catch (RegistrationFailedException e) { LOGGER.error("Registration '" + e.getRegistryType().name() + "' failed:", e); }
+        } catch (final RegistrationFailedException e) { LOGGER.error("Registration '" + e.getRegistryType().name() + "' failed:", e); }
 
         LOGGER.info("(DTDMClient) Initialisation complete!");
     }

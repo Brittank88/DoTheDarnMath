@@ -23,7 +23,7 @@ public @NonNls abstract class CommandRegistry {
 
             // Register the commands.
             CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(DTDMCommand.build()));
-        } catch (Exception e) { throw new RegistrationFailedException(e, RegistrationFailedException.REGISTRY_TYPE.COMMAND); }
+        } catch (final Exception e) { throw new RegistrationFailedException(e, RegistrationFailedException.REGISTRY_TYPE.COMMAND); }
 
         DTDMClient.LOGGER.info("(CommandRegistry) Registration complete!");
     }

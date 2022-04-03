@@ -28,9 +28,9 @@ public class SuggestionSupplier {
     private final List<Suggestion> suggestions = new ArrayList<>();
     private final List<OrderedText> messages = new ArrayList<>();
 
-    public SuggestionSupplier(ParserFunction<TextFieldWidget, StringReader, List<Suggestion>> parser) { this.parser = parser; }
+    public SuggestionSupplier(final ParserFunction<TextFieldWidget, StringReader, List<Suggestion>> parser) { this.parser = parser; }
 
-    public @NotNull SuggestionSupplier parse(@NotNull TextFieldWidget chatField, StringReader reader) {
+    public final @NotNull SuggestionSupplier parse(final @NotNull TextFieldWidget chatField, StringReader reader) {
 
         // Clear all suggestions.
         this.suggestions.clear();
@@ -38,11 +38,11 @@ public class SuggestionSupplier {
         // Attempt to add all suggestions from the parser to our internal list.
         // If any CommandException is raised, catch it and add it to our messages list.
         try { this.suggestions.addAll(this.parser.apply(chatField, SuggestionUtils.getReaderAtCursor(chatField))); }
-        catch (CommandException e) { this.messages.add(e.getTextMessage().asOrderedText()); }
+        catch (final CommandException e) { this.messages.add(e.getTextMessage().asOrderedText()); }
 
         // Return this instance, for chained calls.
         return this;
     }
-    public @NotNull List<Suggestion> getSuggestions() { return this.suggestions; }
-    public @NotNull List<OrderedText> getMessages() { return this.messages; }
+    public final @NotNull List<Suggestion> getSuggestions() { return this.suggestions; }
+    public final @NotNull List<OrderedText> getMessages() { return this.messages; }
 }
