@@ -63,7 +63,7 @@ public abstract class FunctionUtils {
     public static abstract class StringTools {
 
         public static @NotNull String getFunctionDisplayString(final @NotNull Function function, final boolean includeBody) {
-            return function.getFunctionName() + getFunctionParameterSetString(function) + (includeBody ? '=' + function.getFunctionExpressionString() : "");
+            return function.getFunctionName() + getFunctionParameterSetString(function) + (includeBody ? " = " + function.getFunctionExpressionString() : "");
         }
 
         public static @NotNull String getFunctionParameterSetString(final @NotNull Function function) {
@@ -92,6 +92,8 @@ public abstract class FunctionUtils {
         @SuppressWarnings("SameReturnValue")
         public static @NotNull Integer sendFunction(final @NotNull CommandContext<ServerCommandSource> ctx, final @NotNull Collection<Function> functions) throws CommandException {
 
+            // TODO: Use reflection to replace {body-ext} with the function's code as string?
+
             final String name = StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"));
 
             final Function function = functions.stream()
@@ -101,7 +103,7 @@ public abstract class FunctionUtils {
             final String descriptionString = function.getDescription();
             ctx.getSource().sendFeedback(Text.of(
                     StringTools.getFunctionDisplayString(function, true)
-                            + I18n.translate("message.info.function.compute_time", function.getComputingTime())
+                            + '\n' + I18n.translate("message.info.function.compute_time", function.getComputingTime())
                             + (descriptionString.isBlank() ? "" : '\n' + descriptionString)
             ), false);
 

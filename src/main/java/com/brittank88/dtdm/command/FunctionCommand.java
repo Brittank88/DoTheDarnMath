@@ -16,7 +16,6 @@ import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public abstract class FunctionCommand {
 
@@ -31,10 +30,8 @@ public abstract class FunctionCommand {
         for (Map.Entry<FunctionCategory, Collection<Function>> entry : FunctionCoordinator.FUNCTIONS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
-                            .suggests(new UniversalSuggestionProvider<>(() -> entry.getValue().stream()
-                                    .map(Function::getFunctionName)
-                                    .collect(Collectors.toList())
-                            )).executes(ctx -> FunctionUtils.CommandTools.sendFunction(ctx, entry.getValue()))
+                            .suggests(new UniversalSuggestionProvider<>(() -> entry.getValue().stream().map(Function::getFunctionName).toList()))
+                            .executes(ctx -> FunctionUtils.CommandTools.sendFunction(ctx, entry.getValue()))
                     )
             );
         }
@@ -59,6 +56,7 @@ public abstract class FunctionCommand {
         /* Command for removing a user-defined function. */
         final @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(I18n.translate("commands.generic.literal.remove"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
+                        .suggests(new UniversalSuggestionProvider<>(() -> FunctionCoordinator.getUserFunctions().stream().map(Function::getFunctionName).toList()))
                         .executes(ctx -> FunctionCoordinator.removeFunction(StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name")), ctx))
                 );
 

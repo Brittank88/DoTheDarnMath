@@ -103,7 +103,7 @@ public abstract class ConstantCoordinator {
         getUserConstants().removeIf(c -> c.getConstantName().equals(name));
 
         ctx.getSource().sendFeedback(Text.of(I18n.translate(
-                "message.info.remove.constant",
+                "message.info.constant.remove",
                 StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name"))
         )), false);
 

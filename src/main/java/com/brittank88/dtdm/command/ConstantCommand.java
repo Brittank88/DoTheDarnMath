@@ -16,7 +16,6 @@ import org.mariuszgromada.math.mxparser.Constant;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public abstract class ConstantCommand {
 
@@ -27,10 +26,8 @@ public abstract class ConstantCommand {
         for (final Map.Entry<ConstantCategory, Collection<Constant>> entry : ConstantCoordinator.CONSTANTS.entrySet()) {
             getCommand.then(CommandManager.literal(entry.getKey().name())
                     .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
-                            .suggests(new UniversalSuggestionProvider<>(() -> entry.getValue().stream()
-                                    .map(Constant::getConstantName)
-                                    .collect(Collectors.toList())
-                            )).executes(ctx -> ConstantUtils.CommandTools.sendConstant(ctx, entry.getValue()))
+                            .suggests(new UniversalSuggestionProvider<>(() -> entry.getValue().stream().map(Constant::getConstantName).toList()))
+                            .executes(ctx -> ConstantUtils.CommandTools.sendConstant(ctx, entry.getValue()))
                     )
             );
         }
@@ -54,6 +51,7 @@ public abstract class ConstantCommand {
         /* Command for removing a user-defined constant. */
         final @NotNull LiteralArgumentBuilder<ServerCommandSource> removeCommand = CommandManager.literal(I18n.translate("commands.generic.literal.remove"))
                 .then(CommandManager.argument(I18n.translate("commands.generic.argument.name"), StringArgumentType.word())
+                        .suggests(new UniversalSuggestionProvider<>(() -> ConstantCoordinator.getUserConstants().stream().map(Constant::getConstantName).toList()))
                         .executes(ctx -> ConstantCoordinator.removeConstant(StringArgumentType.getString(ctx, I18n.translate("commands.generic.argument.name")), ctx))
                 );
 

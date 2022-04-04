@@ -2,6 +2,7 @@ package com.brittank88.dtdm.util.expression;
 
 import com.brittank88.dtdm.util.constant.ConstantUtils;
 import com.brittank88.dtdm.util.function.FunctionUtils;
+import com.brittank88.dtdm.util.number.NumberUtils;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -82,7 +83,7 @@ public abstract class ExpressionUtils {
                                 "commands.generic.calculate.broadcast",
                                 playerEntity.getDisplayName(),
                                 expression,
-                                ExpressionUtils.CalculationTools.calculateExpression(expression)
+                                NumberUtils.StringTools.toMinimalString(calculateExpression(expression))
                         )), false));
             } catch (final IllegalArgumentException ignored) {}
 

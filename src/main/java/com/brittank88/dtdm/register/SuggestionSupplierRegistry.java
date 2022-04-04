@@ -4,6 +4,7 @@ import com.brittank88.dtdm.client.DTDMClient;
 import com.brittank88.dtdm.event.callback.minecraft_client.MinecraftClientSetScreenCallback;
 import com.brittank88.dtdm.util.exception.RegistrationFailedException;
 import com.brittank88.dtdm.util.expression.ExpressionUtils;
+import com.brittank88.dtdm.util.number.NumberUtils;
 import com.brittank88.dtdm.util.suggestion.CommandSuggestorWrapper;
 import com.brittank88.dtdm.util.suggestion.SuggestionSupplier;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -44,7 +45,6 @@ public @NonNls abstract class SuggestionSupplierRegistry {
                             if (reader.canRead() && reader.peek() != ' ') return Collections.emptyList();
 
                             // Attempt to find the largest substring that is a valid expression by testing each possible substring prior to the '=' char.
-                            double result;
                             for (int i = 0; i < end; i++) {
 
                                 // Seek to position i.
@@ -59,13 +59,13 @@ public @NonNls abstract class SuggestionSupplierRegistry {
                                 if (i != 0 && reader.peek() != ' ') continue;
 
                                 // Attempt to calculate the expression and determine a result from it.
+                                final double result;
                                 try { result = ExpressionUtils.CalculationTools.calculateExpression(expressionString.toString()); }
-                                catch (CommandException e) { continue; }
+                                catch (final CommandException e) { continue; }
 
                                 // If we were able to calculate a result, we can return a suggestion containing it.
-                                String resultString = String.valueOf(result);
                                 return CommandSource.suggestMatching(
-                                        Collections.singleton(resultString.endsWith(".0") ? resultString.substring(0, resultString.length() - 2) : resultString),
+                                        Collections.singleton(NumberUtils.StringTools.toMinimalString(result)),
                                         new SuggestionsBuilder(chatField.getText().substring(0, end), end)
                                 ).join().getList();
                             }
